@@ -1,2 +1,23 @@
 /* cntnd_list */
 @import url('https://cdn.jsdelivr.net/gh/cntnd/core_style/dist/core_style.css');
+
+.content_box {
+	position: relative;
+}
+.content_type_label {
+    background: silver;
+	position: relative;
+    z-index: 300;
+}
+
+.CMS_HTML ~ a {
+	position: absolute;
+    top: 0;
+	left: 80px;
+}
+
+.CMS_HTML + a {
+	position: absolute;
+    top: 0;
+	left: 60px;
+}
