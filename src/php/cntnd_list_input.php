@@ -1,4 +1,4 @@
-<?php
+?><?php
 // cntnd_list_input
 
 // input/vars
@@ -8,6 +8,9 @@ if (empty($listname)){
 }
 $template = "CMS_VALUE[2]";
 $content = json_decode(base64_decode("CMS_VALUE[3]"), true);
+
+var_dump($content);
+
 // todo refactoring!!!
 $data=array();
 foreach ($content as $item) {
@@ -17,6 +20,7 @@ foreach ($content as $item) {
 }
 
 // other/vars
+$uuid = rand();
 $template_dir   = $cfgClient[$client]["module"]["path"].'cntnd_list/template/'; // evtl auch mit __DIR__
 $templateOptions= array();
 $handle         = opendir($template_dir);
@@ -44,15 +48,15 @@ while ( $db->nextRecord() ) {
 
 // includes
 cInclude('module', 'includes/cntnd_list_input_functions.php');
+cInclude('module', 'includes/cntnd_list_script.php');
 
 if (!$template OR empty($template) OR $template=="false"){
  echo '<div class="alert alert-info">'.mi18n("CHOOSE_TEMPLATE").'</div>';
 }
 ?>
-
 <div class="form-vertical">
   <div class="form-group">
-    <label for="listname"></label>
+    <label for="listname"><?= mi18n("LISTNAME") ?></label>
     <input id="listname" name="CMS_VAR[1]" type="text" value="<?= $listname ?>" />
   </div>
 
@@ -77,7 +81,7 @@ if (!empty($template) AND $template!="false"){
   fclose($handle);
   preg_match_all('@\{\w*?\}@is', $templateContent, $fields);
 
-  echo "<table>";
+  echo '<table class="cntnd_list" data-uuid="'.$uuid.'">';
   foreach(array_unique($fields[0]) as $field){
     $cms_var_field=100+$cms_var;
     $cms_var_type =200+$cms_var;
@@ -86,16 +90,16 @@ if (!empty($template) AND $template!="false"){
 
     echo '<tr>
             <td><b>'.$field.'</b>:</td>
-            <td><input type="text" name="data['.$cms_var_name.']" value="'.$data['data['.$cms_var_name.']'].'" /></td>
+            <td><input data-uuid="'.$uuid.'" type="text" name="data['.$cms_var_name.']" value="'.$data['data['.$cms_var_name.']'].'" /></td>
             <td>
-                <select name="data['.$cms_var_type.']">
+                <select data-uuid="'.$uuid.'" name="data['.$cms_var_type.']">
                 '.getChooseFields($cms_var_type,$field,$data['data['.$cms_var_type.']']).'
                 </select>
-                <input type="hidden" name="data['.$cms_var_field.']" value="'.$field.'" />
+                <input data-uuid="'.$uuid.'" type="hidden" name="data['.$cms_var_field.']" value="'.$field.'" />
             </td>
             <td>';
             if (checkExtraFields($data['data['.$cms_var_type.']'])){
-                  echo '<select name="data['.$cms_var_extra.']">
+                  echo '<select data-uuid="'.$uuid.'" name="data['.$cms_var_extra.']">
                        '.getExtraFields($cms_var_extra,$data['data['.$cms_var_type.']'],$data['data['.$cms_var_extra.']']).'
                         </select>';
             }
@@ -103,6 +107,12 @@ if (!empty($template) AND $template!="false"){
           </tr>';
     $cms_var++;
   }
+  echo '<tr><td colspan="4">
+      <input type="hidden" name="CMS_VAR[3]" id="dataDynList'.$unique.'" value="CMS_VALUE[3]" />
+      <input type="hidden" name="CMS_VAR[4]" value="'.$cms_var.'" />
+      <input type="hidden" name="update" value="false" id="update" />
+      <a href="#" id="saveDynList'.$unique.'" style="float: right;">[SPEICHERN]</a>
+    </td></tr>';
   echo "</table>";
 }
-?>
+?><?php

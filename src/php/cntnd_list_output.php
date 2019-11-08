@@ -45,7 +45,7 @@ if($contenido&&($view=="edit")){
 if ($editmode){
 	echo '<hr /><p />Dynamische Liste:<div class="dyn-list">';
 }
-cInclude('module', 'includes/class.template.php');
+cInclude('includes', 'class.template.php');
 cInclude("includes", "functions.upl.php");
 
 if (!class_exists('cntndDynList')) {
