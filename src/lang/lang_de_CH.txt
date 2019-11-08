@@ -1,4 +1,8 @@
+MODULE=Dynamische List
 SELECT_CHOOSE=-bitte wählen-
 CHOOSE_TEMPLATE=Bitte das Template auswählen ansonsten wird die Liste nicht angezeigt.
 LISTNAME=Name der Liste (default: cntnd_list)
 TEMPLATE=Template wählen:
+SAVE=Speichern
+DELETE=Löschen
+SWAP=Verschieben

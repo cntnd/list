@@ -38,7 +38,7 @@ cInclude('module', 'includes/cntnd_list_input_functions.php');
 cInclude('module', 'includes/cntnd_list_script.php');
 
 if (!$template OR empty($template) OR $template=="false"){
- echo '<div class="alert alert-info">'.mi18n("CHOOSE_TEMPLATE").'</div>';
+  echo '<div class="alert alert-info">'.mi18n("CHOOSE_TEMPLATE").'</div>';
 }
 ?>
 <div class="form-vertical">
