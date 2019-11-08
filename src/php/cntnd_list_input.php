@@ -7,24 +7,13 @@ if (empty($listname)){
     $listname="cntnd_list";
 }
 $template = "CMS_VALUE[2]";
-$content = json_decode(base64_decode("CMS_VALUE[3]"), true);
-
-var_dump($content);
-
-// todo refactoring!!!
-$data=array();
-foreach ($content as $item) {
-  $key = key($item);
-  $value = $item[$key];
-  $data[$key]=$value;
-}
+$data = json_decode(base64_decode("CMS_VALUE[3]"), true);
 
 // other/vars
 $uuid = rand();
-$template_dir   = $cfgClient[$client]["module"]["path"].'cntnd_list/template/'; // evtl auch mit __DIR__
 $templateOptions= array();
+$template_dir   = $cfgClient[$client]["module"]["path"].'cntnd_list/template/';
 $handle         = opendir($template_dir);
-
 while ($entryName = readdir($handle)){
     if (is_file($template_dir.$entryName)){
       $selected="";
@@ -36,8 +25,6 @@ while ($entryName = readdir($handle)){
 }
 closedir($handle);
 asort($templateOptions);
-
-$unique = rand();
 
 $db=cRegistry::getDb();
 $sql = "SELECT DISTINCT dirname from ".$cfg["tab"]["upl"];
@@ -107,12 +94,7 @@ if (!empty($template) AND $template!="false"){
           </tr>';
     $cms_var++;
   }
-  echo '<tr><td colspan="4">
-      <input type="hidden" name="CMS_VAR[3]" id="dataDynList'.$unique.'" value="CMS_VALUE[3]" />
-      <input type="hidden" name="CMS_VAR[4]" value="'.$cms_var.'" />
-      <input type="hidden" name="update" value="false" id="update" />
-      <a href="#" id="saveDynList'.$unique.'" style="float: right;">[SPEICHERN]</a>
-    </td></tr>';
   echo "</table>";
+  echo '<input type="hidden" name="CMS_VAR[3]" id="content_'.$uuid.'" value="CMS_VALUE[3]" />';
 }
 ?><?php

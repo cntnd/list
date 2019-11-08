@@ -1,6 +1,6 @@
 <script>
 $( document ).ready(function() {
-  function formJSON(form) {
+  function toJSON(form) {
       var allowedInputElements = ['input','textarea','select'];
       var o = {};
       for (var i = 0; i < form.length; i++) {
@@ -18,27 +18,22 @@ $( document ).ready(function() {
           }
         }
       };
-      return o;
+      return JSON.stringify(o);
   };
 
   function gatherElements(uuid){
     if (uuid!==undefined){
-      var size = $('*').filter(function() {
+      var elements = $('*').filter(function() {
         return $(this).data('uuid') === uuid;
       });
-      var data = formJSON(size);
-      console.log(data);
-      console.log(window.btoa(JSON.stringify(data)));
+      var base64data = window.btoa(toJSON(elements));
+      $('#content_'+uuid).val(base64data);
     }
   }
 
   $('form').submit(function() {
-      var cntnd_list = $('.cntnd_list');
-      console.log(cntnd_list);
       $('.cntnd_list').each(function() {
-        console.log($(this).data('uuid'));
         var uuid = $(this).data('uuid');
-        console.log('uuid',uuid);
         gatherElements(uuid);
       });
       return false; // return false to cancel form action
