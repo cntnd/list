@@ -37,16 +37,28 @@ if (!empty($template) AND $template!="false"){
   fclose($handle);
   preg_match_all('@\{\w*?\}@is', $templateContent, $fields);
 }
-
 $data = json_decode(base64_decode("CMS_VALUE[3]"), true);
-echo '<pre>';
-var_dump($data);
-echo '</pre>';
+
 // includes
-//cInclude('module', 'includes/class.cntnd_list.php');
+cInclude('module', 'includes/class.cntnd_list.php');
+cInclude('module', 'includes/class.cntnd_list_output.php');
+
+// values
+$cntndList = new CntndList($idart, $lang, $client, $listname);
+$values = $cntndList->load();
+echo '<pre>';
+var_dump($values);
+echo '</pre>';
 
 // module
 if ($editmode){
+  if ($_POST){
+    echo '<strong>POST</strong>';
+    echo '<pre>';
+    var_dump($_POST);
+    echo '</pre>';
+  }
+
 	echo '<div class="content_box"><label class="content_type_label">'.mi18n("MODULE").'</label>';
 
   if (!$template OR empty($template) OR $template=="false"){
@@ -54,33 +66,31 @@ if ($editmode){
   }
   else {
   	// input
-  	ksort($data);
   	?>
-  	<form id="LIST_<?= $listname ?>" name="LIST_<?= $listname ?>" action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-  		<?php
-  			foreach($data as $key => $field){
-  				echo $key."::".$field."<br />";
-  			}
-  		?>
-  		<h1>form</h1>
+  	<form id="LIST_<?= $listname ?>" name="LIST_<?= $listname ?>" method="post">
       <?php
-      echo '<table class="cntnd_list">';
+      $cntndListOutput = new CntndListOutput($cntndList->medien());
+
+      $index=0;
       foreach(array_unique($fields[0]) as $field){
-          echo '<tr>';
-          echo '<td><b>'.$field.'</b></td>';
-          echo '</tr>';
+          echo $cntndListOutput->input($data,$values,$index);
+          echo $cntndListOutput->outputData($data,$index);
+          $index++;
       }
-      echo '</table>';
       ?>
-  		<button class="btn btn-primary" type="button"><?= mi18n("SAVE") ?></button>
+  		<button class="btn btn-primary" type="button" onclick="javascript:document.getElementById('LIST_<?= $listname ?>').submit();"><?= mi18n("SAVE") ?></button>
   		<hr />
-  		liste aller eintäge
+  		liste aller einträge
   	</form>
   	<?php
   }
+
+  echo '</div>';
 }
 
-if ($editmode){
-	echo '</div>';
+if (!$editmode){
+  echo '<pre>';
+  var_dump($values);
+  echo '</pre>';
 }
 ?>

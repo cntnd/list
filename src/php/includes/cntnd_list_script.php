@@ -36,7 +36,7 @@ $( document ).ready(function() {
         var uuid = $(this).data('uuid');
         gatherElements(uuid);
       });
-      return false; // return false to cancel form action
+      return true; // return false to cancel form action
   });
 });
 </script>
