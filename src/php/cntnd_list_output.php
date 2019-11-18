@@ -67,7 +67,7 @@ if ($editmode){
   else {
   	// input
   	?>
-  	<form id="LIST_<?= $listname ?>" name="LIST_<?= $listname ?>" method="post">
+  	<form data-uuid="LIST_<?= $listname ?>" id="LIST_<?= $listname ?>" name="LIST_<?= $listname ?>" method="post">
       <?php
       $cntndListOutput = new CntndListOutput($cntndList->medien());
 
@@ -78,7 +78,8 @@ if ($editmode){
           $index++;
       }
       ?>
-  		<button class="btn btn-primary" type="button" onclick="javascript:document.getElementById('LIST_<?= $listname ?>').submit();"><?= mi18n("SAVE") ?></button>
+      <!-- onclick="javascript:document.getElementById('LIST_<?= $listname ?>').submit();" -->
+  		<button class="btn btn-primary" type="submit"><?= mi18n("SAVE") ?></button>
   		<hr />
   		liste aller einträge
   	</form>
