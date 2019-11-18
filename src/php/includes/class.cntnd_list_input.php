@@ -1,6 +1,11 @@
 <?php
-if (!function_exists('getChooseFields')) {
-  function getChooseFields($cms_var,$field,$value){
+
+/**
+ * cntnd_list Input Class
+ */
+class CntndListInput {
+
+  public static function getChooseFields($field,$value){
     $internal="";
     $no_fields=array("{id}","{icon}","{img_over}","{img_icon}","{target}","{javascript}");
 
@@ -23,12 +28,12 @@ if (!function_exists('getChooseFields')) {
 
     return $choose_fields;
   }
-}
 
-if (!function_exists('getExtraFields')) {
-  function getExtraFields($cms_var,$type,$value){
-    global $dirs;
+  public static function isExtraField($type){
+    return ($type=="downloadlink" OR $type=="textarea");
+  }
 
+  public static function getExtraFields($type,$value,$dirs){
     switch($type){
       case 'downloadlink':
         $extras[0]['value']=true;
@@ -63,12 +68,6 @@ if (!function_exists('getExtraFields')) {
   }
 }
 
-if (!function_exists('checkExtraFields')) {
-  function checkExtraFields($type){
-    if ($type=="downloadlink" OR $type=="textarea"){
-      return true;
-    }
-    return false;
-  }
-}
+
+
 ?>

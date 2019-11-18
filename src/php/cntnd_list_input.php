@@ -34,7 +34,7 @@ while ( $db->nextRecord() ) {
 }
 
 // includes
-cInclude('module', 'includes/cntnd_list_input_functions.php');
+cInclude('module', 'includes/class.cntnd_list_input.php');
 cInclude('module', 'includes/cntnd_list_script.php');
 
 if (!$template OR empty($template) OR $template=="false"){
@@ -69,32 +69,25 @@ if (!empty($template) AND $template!="false"){
   preg_match_all('@\{\w*?\}@is', $templateContent, $fields);
 
   echo '<table class="cntnd_list" data-uuid="'.$uuid.'">';
+  $index=0;
   foreach(array_unique($fields[0]) as $field){
-    $cms_var_field=100+$cms_var;
-    $cms_var_type =200+$cms_var;
-    $cms_var_name =300+$cms_var;
-    $cms_var_extra=400+$cms_var;
+      $tpl_field = '['.$index.'][field]';
+      $label = '['.$index.'][label]';
+      $type ='['.$index.'][type]';
+      $extra ='['.$index.'][extra]';
 
-    echo '<tr>
-            <td><b>'.$field.'</b>:</td>
-            <td><input data-uuid="'.$uuid.'" type="text" name="data['.$cms_var_name.']" value="'.$data['data['.$cms_var_name.']'].'" /></td>
-            <td>
-                <select data-uuid="'.$uuid.'" name="data['.$cms_var_type.']">
-                '.getChooseFields($cms_var_type,$field,$data['data['.$cms_var_type.']']).'
-                </select>
-                <input data-uuid="'.$uuid.'" type="hidden" name="data['.$cms_var_field.']" value="'.$field.'" />
-            </td>
-            <td>';
-            if (checkExtraFields($data['data['.$cms_var_type.']'])){
-                  echo '<select data-uuid="'.$uuid.'" name="data['.$cms_var_extra.']">
-                       '.getExtraFields($cms_var_extra,$data['data['.$cms_var_type.']'],$data['data['.$cms_var_extra.']']).'
-                        </select>';
-            }
-    echo '  </td>
-          </tr>';
-    $cms_var++;
+      echo '<tr>';
+      echo '<td><b>'.$field.'</b><input data-uuid="'.$uuid.'" type="hidden" name="'.$tpl_field.'" value="'.$field.'" /></td>';
+      echo '<td><input data-uuid="'.$uuid.'" type="text" name="'.$label.'" value="'.$data[$label].'" /></td>';
+      echo '<td><select data-uuid="'.$uuid.'" name="'.$type.'">'.CntndListInput::getChooseFields($field,$data[$type]).'</select></td>';
+      echo '<td>';
+      echo '<select data-uuid="'.$uuid.'" name="'.$extra.'">'.CntndListInput::getExtraFields($data[$type],$data[$extra],$dirs).'</select>';
+      echo '</td>';
+      echo '</tr>';
+
+      $index++;
   }
-  echo "</table>";
+  echo '</table>';
   echo '<input type="hidden" name="CMS_VAR[3]" id="content_'.$uuid.'" value="CMS_VALUE[3]" />';
 }
 ?><?php
