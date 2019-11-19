@@ -104,13 +104,8 @@ class CntndList {
     $this->tpl->reset();
     if (is_array($data)){
       foreach ($data as $key => $value) {
-        $this->tpl->set('d', '_link_end', 'LINK_END'.$key);
-        $this->tpl->set('d', 'link', 'LINK'.$key);
-        $this->tpl->set('d', 'link_titel', 'LINK_TITEL'.$key);
-        foreach ($value as $field) {
-          // code...
-          //$this->renderField($field);
-
+        foreach ($value as $name => $field) {
+          $this->renderField(self::tplName($name), $field);
         }
         $this->tpl->next();
       }
@@ -118,10 +113,15 @@ class CntndList {
     $this->tpl->generate($template);
   }
 
-  private function renderField($field){
-    var_dump($field);
-    /*
+  private function renderField($name, $field){
     switch($field['type']){
+      case 'linktext':
+          $this->doLinkField($name, $field);
+          break;
+      case 'downloadlink':
+          $this->doDownloadLinkField($name, $field);
+          break;
+      /*
         case 'titel':
             $this->doTitelField($this->tplName($field['name']),$value);
             break;
@@ -132,14 +132,33 @@ class CntndList {
         case 'textarea':
             $this->doField($this->tplName($field['name']),$value,$field['extra']);
             break;
-        case 'linktext':
-            $this->doLinkField($this->tplName($field['name']),$value);
-            break;
-        case 'downloadlink':
-            $this->doDownloadLinkField($this->tplName($field['name']),$value,$field['extra']);
-            break;
+            */
     }
-    */
+  }
+
+  private static function tplName($name){
+    return str_replace(array("{","}"),"",$name);
+  }
+
+  private function doLinkField($name, $field){
+    if (!empty($field['value'])){
+      $this->tpl->set('d', $name, '<span class="'.$this->listname.' cntnd_linktext">'.stripslashes($field['value']).'</span>');
+    }
+    else {
+      $this->tpl->set('d', $name, "");
+    }
+  }
+
+  private function doDownloadLinkField($name, $field, $icons=true){
+    if (!empty($field['value']) AND $field['value']!=0){
+      $link_tag = '<a class="'.$this->listname.' cntnd_link" href="'.$link.'" target="'.$target.'">';
+      $this->tpl->set('d', $name, $link_tag);
+      $this->tpl->set('d', "_".$name."_end", '</a>');
+    }
+    else {
+      $this->tpl->set('d', $name, "");
+      $this->tpl->set('d', "_".$name."_end", '');
+    }
   }
 }
 

@@ -66,6 +66,10 @@ if ($editmode){
     }
   }
 
+  echo '<pre>';
+  var_dump($values);
+  echo '</pre>';
+
 	echo '<div class="content_box"><label class="content_type_label">'.mi18n("MODULE").'</label>';
 
   if (!$template OR empty($template) OR $template=="false"){

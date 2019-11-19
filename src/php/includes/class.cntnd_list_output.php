@@ -11,7 +11,7 @@ class CntndListOutput {
     $this->medien=$medien;
   }
 
-  private static function dropdown($label, $name, $value, $list){
+  private static function downloadlink($label, $name, $value, $list){
     $input = '<div class="form-group">';
     $input.= '<label>'.$label.'</label>';
     $input.= '<select name="'.$name.'[value]">'."\n";
@@ -28,6 +28,8 @@ class CntndListOutput {
     }
     $input.= '</select>'."\n";
     $input.= '</div>';
+
+    // auch target als dropdown!!!
 
     $input.= '<div class="form-group">';
     $input.= '<label><i>Pfad (URL, idart):</i></label>';
@@ -51,6 +53,7 @@ class CntndListOutput {
     $type = 'data['.$index.'][type]';
 
     $name = 'data['.$listname.']['.$data[$field].']';
+    $valueName = $name.'[value]';
 
     $input = '';
     switch($data[$type]){
@@ -60,16 +63,16 @@ class CntndListOutput {
       case 'textarea':
           $input.= '<div class="form-group">';
           $input.= '<label>'.$data[$label].'</label>';
-          $input.= '<textarea name="'.$name.'">'.$values[$name].'</textarea>';
+          $input.= '<textarea name="'.$valueName.'">'.$values[$valueName].'</textarea>';
           $input.= '</div>';
           break;
       case 'downloadlink':
-          $input.= self::dropdown($data[$label], $name,$values[$name],$this->medien);
+          $input.= self::downloadlink($data[$label], $name,$values[$name],$this->medien);
           break;
       default:
           $input.= '<div class="form-group">';
           $input.= '<label>'.$data[$label].'</label>';
-          $input.= '<input type="'.self::inputType($data[$type]).'" name="'.$name.'" value="'.$values[$name].'" />';
+          $input.= '<input type="'.self::inputType($data[$type]).'" name="'.$valueName.'" value="'.$values[$valueName].'" />';
           $input.= '</div>';
     }
     $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$data[$type].'" />';
