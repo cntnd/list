@@ -101,15 +101,16 @@ class CntndList {
   }
 
   public function render($template, $data){
-    var_dump($this->tpl);
-
     $this->tpl->reset();
     if (is_array($data)){
       foreach ($data as $key => $value) {
-        echo $key;
+        $this->tpl->set('d', '_link_end', 'LINK_END'.$key);
+        $this->tpl->set('d', 'link', 'LINK'.$key);
+        $this->tpl->set('d', 'link_titel', 'LINK_TITEL'.$key);
         foreach ($value as $field) {
           // code...
-          $this->renderField($field);
+          //$this->renderField($field);
+
         }
         $this->tpl->next();
       }

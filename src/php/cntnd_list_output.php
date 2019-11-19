@@ -89,15 +89,11 @@ if ($editmode){
     liste aller einträge
     <?php
   }
-
-  echo '</div>';
 }
 
 $cntndList->render($templateContent, $values);
 
-if (!$editmode){
-  echo '<pre>';
-  var_dump($values);
-  echo '</pre>';
+if ($editmode){
+    echo '</div>';
 }
 ?>
