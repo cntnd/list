@@ -31,24 +31,24 @@ if (empty($listname)){
     $listname="cntnd_list";
 }
 $template = "CMS_VALUE[2]";
+$count = 0;
 if (!empty($template) AND $template!="false"){
   $handle = fopen($template, "r");
   $templateContent = fread($handle, filesize($template));
   fclose($handle);
-  preg_match_all('@\{\w*?\}@is', $templateContent, $fields);
+  preg_match_all('@\{\w*?\}@is', $templateContent, $templateFields);
+  $count = count(array_unique($templateFields[0]));
 }
 $data = json_decode(base64_decode("CMS_VALUE[3]"), true);
 
 // includes
 cInclude('module', 'includes/class.cntnd_list.php');
 cInclude('module', 'includes/class.cntnd_list_output.php');
+cInclude('module', 'includes/class.template.php');
 
 // values
 $cntndList = new CntndList($idart, $lang, $client, $listname);
 $values = $cntndList->load();
-echo '<pre>';
-var_dump($values);
-echo '</pre>';
 
 // module
 if ($editmode){
@@ -57,6 +57,13 @@ if ($editmode){
     echo '<pre>';
     var_dump($_POST);
     echo '</pre>';
+    if (array_key_exists('data',$_POST)){
+      if (array_key_exists($listname,$_POST['data'])){
+        $values[] = $_POST['data'][$listname];
+        $serializeddata = json_encode($values);
+        $cntndList->store($serializeddata);
+      }
+    }
   }
 
 	echo '<div class="content_box"><label class="content_type_label">'.mi18n("MODULE").'</label>';
@@ -66,28 +73,27 @@ if ($editmode){
   }
   else {
   	// input
+    $formId = "LIST_".$listname;
   	?>
-  	<form data-uuid="LIST_<?= $listname ?>" id="LIST_<?= $listname ?>" name="LIST_<?= $listname ?>" method="post">
+  	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="<?= $formId ?>" method="post">
       <?php
       $cntndListOutput = new CntndListOutput($cntndList->medien());
-
-      $index=0;
-      foreach(array_unique($fields[0]) as $field){
-          echo $cntndListOutput->input($data,$values,$index);
-          echo $cntndListOutput->outputData($data,$index);
-          $index++;
+      for ($index=0;$index<$count;$index++){
+          echo $cntndListOutput->input($data,$values,$index,$listname);
       }
       ?>
       <!-- onclick="javascript:document.getElementById('LIST_<?= $listname ?>').submit();" -->
-  		<button class="btn btn-primary" type="submit"><?= mi18n("SAVE") ?></button>
-  		<hr />
-  		liste aller einträge
+  		<button class="btn btn-primary" type="submit"><?= mi18n("ADD") ?></button>
   	</form>
-  	<?php
+    <hr />
+    liste aller einträge
+    <?php
   }
 
   echo '</div>';
 }
+
+$cntndList->render($templateContent, $values);
 
 if (!$editmode){
   echo '<pre>';

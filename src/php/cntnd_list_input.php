@@ -70,6 +70,7 @@ if (!empty($template) AND $template!="false"){
 
   echo '<table class="cntnd_list" data-uuid="'.$uuid.'">';
   $index=0;
+  $count = count(array_unique($fields[0]));
   foreach(array_unique($fields[0]) as $field){
       $tpl_field = 'data['.$index.'][field]';
       $label = 'data['.$index.'][label]';

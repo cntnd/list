@@ -45,42 +45,34 @@ class CntndListOutput {
     }
   }
 
-  public function input($data,$values,$index){
+  public function input($data,$values,$index,$listname){
+    $field = 'data['.$index.'][field]';
     $label = 'data['.$index.'][label]';
-    $type ='data['.$index.'][type]';
-    $value ='data['.$index.'][value]';
+    $type = 'data['.$index.'][type]';
+
+    $name = 'data['.$listname.']['.$data[$field].']';
 
     $input = '';
     switch($data[$type]){
       case 'internal':
-          $input.= '<input type="'.self::inputType($data[$type]).'" name="'.$value.'" value="'.$values[$value].'" />';
+          $input.= '<input type="'.self::inputType($data[$type]).'" name="'.$name.'" value="'.$values[$name].'" />';
           break;
       case 'textarea':
           $input.= '<div class="form-group">';
           $input.= '<label>'.$data[$label].'</label>';
-          $input.= '<textarea name="'.$value.'">'.$values[$value].'</textarea>';
+          $input.= '<textarea name="'.$name.'">'.$values[$name].'</textarea>';
           $input.= '</div>';
           break;
       case 'downloadlink':
-          $input.= self::dropdown($data[$label], $value,$values[$value],$this->medien);
+          $input.= self::dropdown($data[$label], $name,$values[$name],$this->medien);
           break;
       default:
           $input.= '<div class="form-group">';
           $input.= '<label>'.$data[$label].'</label>';
-          $input.= '<input type="'.self::inputType($data[$type]).'" name="'.$value.'" value="'.$values[$value].'" />';
+          $input.= '<input type="'.self::inputType($data[$type]).'" name="'.$name.'" value="'.$values[$name].'" />';
           $input.= '</div>';
     }
-    return $input;
-  }
-
-  public function outputData($data,$index){
-    $field = 'data['.$index.'][field]';
-    $type ='data['.$index.'][type]';
-    $extra ='data['.$index.'][extra]';
-
-    $input = '<input type="hidden" name="'.$field.'" value="'.$data[$field].'" />';
-    $input.= '<input type="hidden" name="'.$type.'" value="'.$data[$type].'" />';
-    $input.= '<input type="hidden" name="'.$extra.'" value="'.$data[$extra].'" />';
+    $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$data[$type].'" />';
     return $input;
   }
 }

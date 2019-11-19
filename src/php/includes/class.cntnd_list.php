@@ -9,7 +9,6 @@ class CntndList {
   private $idart;
   private $lang;
   private $listname;
-
   private $db;
   private $tpl;
 
@@ -21,9 +20,8 @@ class CntndList {
     $this->idart = $idart;
     $this->lang = $lang;
     $this->listname = $listname;
-
     $this->db = new cDb;
-    $this->tpl = cSmartyFrontend::getInstance();
+    $this->tpl = new Template();
 
     // medien, images, folders
     $cfg = cRegistry::getConfig();
@@ -78,7 +76,7 @@ class CntndList {
     $this->db->query($sql, $values);
     while ($this->db->nextRecord()) {
       if (is_string($this->db->f('serializeddata'))){
-          $data[] = json_decode(base64_decode($this->db->f('serializeddata')), true);
+          $data = json_decode(base64_decode($this->db->f('serializeddata')), true);
       }
     }
 
@@ -90,7 +88,7 @@ class CntndList {
         'listname' => $this->listname,
         'idart' => cSecurity::toInteger($this->idart),
         'idlang' => cSecurity::toInteger($this->lang),
-        'data' => cSecurity::escapeDB(base64_encode($data))
+        'data' => $this->db->escape(base64_encode($data))
     );
     $this->db->query("SELECT idlist FROM cntnd_dynlist WHERE listname=':listname' AND idart=:idart AND idlang=:idlang", $values);
     if (!$this->db->nextRecord()){
@@ -100,6 +98,47 @@ class CntndList {
         $sql = "UPDATE cntnd_dynlist SET serializeddata=':data' WHERE listname=':listname' AND idart=:idart AND idlang=:idlang";
     }
     $this->db->query($sql, $values);
+  }
+
+  public function render($template, $data){
+    var_dump($this->tpl);
+
+    $this->tpl->reset();
+    if (is_array($data)){
+      foreach ($data as $key => $value) {
+        echo $key;
+        foreach ($value as $field) {
+          // code...
+          $this->renderField($field);
+        }
+        $this->tpl->next();
+      }
+    }
+    $this->tpl->generate($template);
+  }
+
+  private function renderField($field){
+    var_dump($field);
+    /*
+    switch($field['type']){
+        case 'titel':
+            $this->doTitelField($this->tplName($field['name']),$value);
+            break;
+        case 'plain':
+            $this->doPlainField($this->tplName($field['name']),$value);
+            break;
+        case 'text':
+        case 'textarea':
+            $this->doField($this->tplName($field['name']),$value,$field['extra']);
+            break;
+        case 'linktext':
+            $this->doLinkField($this->tplName($field['name']),$value);
+            break;
+        case 'downloadlink':
+            $this->doDownloadLinkField($this->tplName($field['name']),$value,$field['extra']);
+            break;
+    }
+    */
   }
 }
 
