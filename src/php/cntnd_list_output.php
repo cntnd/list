@@ -65,6 +65,14 @@ if ($editmode){
         $serializeddata = json_encode($values);
         $cntndList->store($serializeddata);
       }
+      else if(array_key_exists('action',$_POST) && array_key_exists('key',$_POST)) {
+        $keyToUpdate=$_POST['key'];
+        $dataToUpdate=json_decode(base64_decode($_POST['data']));
+        echo '<strong>DO: '.$_POST['action'].'</strong>';
+        echo '<pre>';
+        var_dump($dataToUpdate);
+        echo '</pre>';
+      }
     }
   }
 

@@ -22,7 +22,7 @@ $( document ).ready(function() {
   };
 
   function gatherElements(uuid,key){
-    var base64data='';
+    var data='';
     if (uuid!==undefined && key!==undefined){
       var elements = $('.listitem *').filter(function(){
           var name = $(this).attr('name');
@@ -32,9 +32,9 @@ $( document ).ready(function() {
           }
           return false;
       });
-      base64data = window.btoa(toJSON(elements));
+      data = window.btoa(toJSON(elements));
     }
-    return base64data;
+    return data;
   }
 
   $('form').submit(function() {
@@ -55,6 +55,7 @@ $( document ).ready(function() {
     $('#'+uuid+' input[name=key]').val(key);
     $('#'+uuid+' input[name=data]').val(data);
     $('#'+uuid+' input[name=action]').val(action);
+    $('#'+uuid).submit();
   });
 });
 </script>
