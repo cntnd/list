@@ -12,6 +12,9 @@ class CntndListOutput {
   }
 
   private static function downloadlink($label, $name, $value, $list){
+    if (!$value){
+      $value=array('value'=>'','idart'=>'');
+    }
     $input = '<div class="form-group">';
     $input.= '<label>'.$label.'</label>';
     $input.= '<select name="'.$name.'[value]">'."\n";
@@ -33,7 +36,7 @@ class CntndListOutput {
 
     $input.= '<div class="form-group">';
     $input.= '<label><i>Pfad (URL, idart):</i></label>';
-    $input.= '<input type="text" name="'.$name.'[idart]" value="'.$value[$idart].'" />';
+    $input.= '<input type="text" name="'.$name.'[idart]" value="'.$value['idart'].'" />';
     $input.= '</div>';
     return $input;
   }
@@ -55,27 +58,42 @@ class CntndListOutput {
     $name = 'data['.$listname.']['.$data[$field].']';
     $valueName = $name.'[value]';
 
+    $input = $this->renderInput($name, $data[$type], $data[$label]);
+    $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$data[$type].'" />';
+    return $input;
+  }
+
+  public function entry($fieldName,$label,$key,$field,$listname){
+    $name = 'data['.$key.']['.$listname.']['.$fieldName.']';
+    return $this->renderInput($name, $field['type'], $label, $field);
+  }
+
+  private function renderInput($name, $type, $label, $value=false){
+    $valueName = $name.'[value]';
+    if ($value){
+      $valueValue = $value['value'];
+    }
+
     $input = '';
-    switch($data[$type]){
+    switch($type){
       case 'internal':
-          $input.= '<input type="'.self::inputType($data[$type]).'" name="'.$name.'" value="'.$values[$name].'" />';
+          $input.= '<input type="'.self::inputType($type).'" name="'.$name.'" value="'.$valueValue.'" />';
           break;
       case 'textarea':
           $input.= '<div class="form-group">';
-          $input.= '<label>'.$data[$label].'</label>';
-          $input.= '<textarea name="'.$valueName.'">'.$values[$valueName].'</textarea>';
+          $input.= '<label>'.$label.'</label>';
+          $input.= '<textarea name="'.$valueName.'">'.$valueValue.'</textarea>';
           $input.= '</div>';
           break;
       case 'downloadlink':
-          $input.= self::downloadlink($data[$label], $name,$values[$name],$this->medien);
+          $input.= self::downloadlink($label,$name,$value,$this->medien);
           break;
       default:
           $input.= '<div class="form-group">';
-          $input.= '<label>'.$data[$label].'</label>';
-          $input.= '<input type="'.self::inputType($data[$type]).'" name="'.$valueName.'" value="'.$values[$valueName].'" />';
+          $input.= '<label>'.$label.'</label>';
+          $input.= '<input type="'.self::inputType($type).'" name="'.$valueName.'" value="'.$valueValue.'" />';
           $input.= '</div>';
     }
-    $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$data[$type].'" />';
     return $input;
   }
 }

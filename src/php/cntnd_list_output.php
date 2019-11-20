@@ -58,6 +58,7 @@ if ($editmode){
     var_dump($_POST);
     echo '</pre>';
     if (array_key_exists('data',$_POST)){
+      // INSERT
       if (array_key_exists($listname,$_POST['data'])){
         $values[] = $_POST['data'][$listname];
         $serializeddata = json_encode($values);
@@ -65,10 +66,6 @@ if ($editmode){
       }
     }
   }
-
-  echo '<pre>';
-  var_dump($values);
-  echo '</pre>';
 
 	echo '<div class="content_box"><label class="content_type_label">'.mi18n("MODULE").'</label>';
 
@@ -78,26 +75,45 @@ if ($editmode){
   else {
   	// input
     $formId = "LIST_".$listname;
+    $entryFormId = "ENTRY_".$listname;
   	?>
   	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="<?= $formId ?>" method="post">
       <?php
       $cntndListOutput = new CntndListOutput($cntndList->medien());
       for ($index=0;$index<$count;$index++){
-          echo $cntndListOutput->input($data,$values,$index,$listname);
+          echo $cntndListOutput->input($data,$values[$index],$index,$listname);
       }
       ?>
       <!-- onclick="javascript:document.getElementById('LIST_<?= $listname ?>').submit();" -->
   		<button class="btn btn-primary" type="submit"><?= mi18n("ADD") ?></button>
   	</form>
     <hr />
-    liste aller einträge
+    <?php
+      foreach ($values as $key => $value) {
+        echo '<div class="listitem" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'">'."\n";
+        $index=0;
+        foreach ($value as $name => $field) {
+          $label = 'data['.$index.'][label]';
+          echo $cntndListOutput->entry($name,$data[$label],$key,$field,$listname);
+          $index++;
+        }
+        echo '<button class="cntnd_list_update_action btn btn-primary" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'">'.mi18n("SAVE").'</button>'."\n";
+        echo '<button class="cntnd_list_delete_action btn" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'">'.mi18n("DELETE") .'</button>'."\n";
+        echo '</div>'."\n";
+      }
+    ?>
+    <form data-uuid="<?= $entryFormId ?>" id="<?= $entryFormId ?>" name="<?= $entryFormId ?>" method="post">
+      <input type="hidden" data-uuid="'.$entryFormId.'" name="key" />
+      <input type="hidden" data-uuid="'.$entryFormId.'" name="data" />
+      <input type="hidden" data-uuid="'.$entryFormId.'" name="action" />
+    </form>
     <?php
   }
+
+  echo '</div>';
 }
 
-$cntndList->render($templateContent, $values);
-
-if ($editmode){
-    echo '</div>';
+if (!$editmode){
+  $cntndList->render($templateContent, $values);
 }
 ?>
