@@ -1,5 +1,6 @@
 <script>
 $( document ).ready(function() {
+  // toJSON is not CORRECT!!!
   function toJSON(form) {
       var allowedInputElements = ['input','textarea','select'];
       var o = {};
@@ -32,7 +33,9 @@ $( document ).ready(function() {
           }
           return false;
       });
-      data = window.btoa(toJSON(elements));
+      var json = toJSON(elements);
+      console.log(json);
+      data = window.btoa(json);
     }
     return data;
   }
