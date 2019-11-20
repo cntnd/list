@@ -45,6 +45,7 @@ $data = json_decode(base64_decode("CMS_VALUE[3]"), true);
 cInclude('module', 'includes/class.cntnd_list.php');
 cInclude('module', 'includes/class.cntnd_list_output.php');
 cInclude('module', 'includes/class.template.php');
+cInclude('module', 'includes/script.cntnd_list_output.php');
 
 // values
 $cntndList = new CntndList($idart, $lang, $client, $listname);
@@ -90,22 +91,22 @@ if ($editmode){
     <hr />
     <?php
       foreach ($values as $key => $value) {
-        echo '<div class="listitem" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'">'."\n";
+        echo '<div class="listitem">'."\n";
         $index=0;
         foreach ($value as $name => $field) {
           $label = 'data['.$index.'][label]';
           echo $cntndListOutput->entry($name,$data[$label],$key,$field,$listname);
           $index++;
         }
-        echo '<button class="cntnd_list_update_action btn btn-primary" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'">'.mi18n("SAVE").'</button>'."\n";
-        echo '<button class="cntnd_list_delete_action btn" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'">'.mi18n("DELETE") .'</button>'."\n";
+        echo '<button class="cntnd_list_action btn btn-primary" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="update">'.mi18n("SAVE").'</button>'."\n";
+        echo '<button class="cntnd_list_action btn" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="delete">'.mi18n("DELETE") .'</button>'."\n";
         echo '</div>'."\n";
       }
     ?>
     <form data-uuid="<?= $entryFormId ?>" id="<?= $entryFormId ?>" name="<?= $entryFormId ?>" method="post">
-      <input type="hidden" data-uuid="'.$entryFormId.'" name="key" />
-      <input type="hidden" data-uuid="'.$entryFormId.'" name="data" />
-      <input type="hidden" data-uuid="'.$entryFormId.'" name="action" />
+      <input type="text" name="key" />
+      <input type="text" name="data" />
+      <input type="text" name="action" />
     </form>
     <?php
   }
