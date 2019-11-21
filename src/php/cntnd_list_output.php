@@ -126,6 +126,6 @@ if ($editmode){
 }
 
 if (!$editmode){
-  $cntndList->render($templateContent, $values);
+  $cntndList->render($templateContent, $values, $data);
 }
 ?>

@@ -54,6 +54,7 @@ class CntndListOutput {
     $field = 'data['.$index.'][field]';
     $label = 'data['.$index.'][label]';
     $type = 'data['.$index.'][type]';
+    $extra = 'data['.$index.'][extra]';
 
     $name = 'data['.$listname.']['.$data[$field].']';
     $valueName = $name.'[value]';

@@ -134,12 +134,15 @@ class CntndList {
     return $values;
   }
 
-  public function render($template, $data){
+  public function render($template, $values, $data){
     $this->tpl->reset();
-    if (is_array($data)){
-      foreach ($data as $key => $value) {
+    if (is_array($values)){
+      foreach ($values as $key => $value) {
+        $index=0;
         foreach ($value as $name => $field) {
-          $this->renderField(self::tplName($name), $field);
+          $extra = 'data['.$index.'][extra]';
+          $this->renderField(self::tplName($name), $field, $data[$extra]);
+          $index++;
         }
         $this->tpl->next();
       }
@@ -147,31 +150,38 @@ class CntndList {
     $this->tpl->generate($template);
   }
 
-  private function renderField($name, $field){
+  private function renderField($name, $field, $extra){
     switch($field['type']){
       case 'linktext':
           $this->doLinkField($name, $field);
           break;
       case 'downloadlink':
-          $this->doDownloadLinkField($name, $field);
+          $this->doDownloadLinkField($name, $field, $extra);
           break;
-      /*
-        case 'titel':
-            $this->doTitelField($this->tplName($field['name']),$value);
-            break;
-        case 'plain':
-            $this->doPlainField($this->tplName($field['name']),$value);
-            break;
-        case 'text':
-        case 'textarea':
-            $this->doField($this->tplName($field['name']),$value,$field['extra']);
-            break;
-            */
+      case 'titel':
+          $this->doTitelField($name, $field);
+          break;/*
+      case 'plain':
+          $this->doPlainField($this->tplName($field['name']),$value);
+          break;
+      case 'text':
+      case 'textarea':
+          $this->doField($this->tplName($field['name']),$value,$field['extra']);
+          break;*/
     }
   }
 
   private static function tplName($name){
     return str_replace(array("{","}"),"",$name);
+  }
+
+  private function doTitelField($name, $field){
+    if (!empty($value['value'])){
+        $this->tpl->set('d', $name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
+    }
+    else {
+        $this->tpl->set('d', $name, "");
+    }
   }
 
   private function doLinkField($name, $field){
@@ -183,7 +193,7 @@ class CntndList {
     }
   }
 
-  private function doDownloadLinkField($name, $field, $icons=true){
+  private function doDownloadLinkField($name, $field, $extra){
     if (!empty($field['value']) AND $field['value']!=0){
       $target="_self";
       if ($field['value']!=999999999 AND $field['value']!=111111111 AND $field['value']!=222222222){
@@ -202,8 +212,8 @@ class CntndList {
           $icon = "linkintern";
       }
       $pikto='';
-      if ($field['value']!=999999999 && $icons){
-          $pikto = 'pikto-after pikto--'.self::getLinkIcon($icon);
+      if ($field['value']!=999999999 && $extra){
+        $pikto = 'pikto-after pikto--'.self::getLinkIcon($icon);
       }
 
       $link_tag = '<a class="'.$this->listname.' cntnd_link '.$pikto.'" href="'.$link.'" target="'.$target.'">';
@@ -245,7 +255,7 @@ class CntndList {
               return "link-intern";
       default:
               return "default";
-  }
+    }
   }
 
   public function doSortable(){
