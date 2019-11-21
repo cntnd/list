@@ -106,9 +106,9 @@ if ($editmode){
       }
     ?>
     <form data-uuid="<?= $entryFormId ?>" id="<?= $entryFormId ?>" name="<?= $entryFormId ?>" method="post">
-      <input type="text" name="key" />
-      <input type="text" name="data" />
-      <input type="text" name="action" />
+      <input type="hidden" name="key" />
+      <input type="hidden" name="data" />
+      <input type="hidden" name="action" />
     </form>
     <?php
   }
