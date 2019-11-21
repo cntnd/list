@@ -116,6 +116,20 @@ class CntndList {
     return $values;
   }
 
+  public function reorder($data, $values){
+    var_dump($data);
+    if (is_array($data)){
+      $reordered=[];
+      foreach ($data as $value) {
+        $reordered[$value['new']]=$values[$value['old']];
+      }
+      $serializeddata = json_encode($reordered);
+      $this->store($serializeddata);
+      return $reordered;
+    }
+    return $values;
+  }
+
   public function render($template, $data){
     $this->tpl->reset();
     if (is_array($data)){
@@ -184,7 +198,8 @@ class CntndList {
             $("#cntnd_list_items-"+uuid+" .listitem").each(function(index){
               order.push({new:index,old:$(this).data("order")});
             });
-            $("#ENTRY_"+uuid+" input[name=reorder]").val(order);
+            $("#ENTRY_"+uuid+" input[name=reorder]").val(window.btoa(JSON.stringify(order)));
+            $("#ENTRY_"+uuid+" button[type=submit]").toggleClass("hide");
           };'."\n";
     echo "var elements = document.getElementById('cntnd_list_items-$this->listname');\n";
     echo "var sortable = Sortable.create(elements, { draggable: '.listitem', onEnd: function(){ onReordering('$this->listname') }});\n";

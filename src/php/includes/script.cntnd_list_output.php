@@ -19,7 +19,7 @@ $( document ).ready(function() {
           }
         }
       };
-      return JSON.stringify(o)
+      return JSON.stringify(o);
   };
 
   function gatherElements(uuid,key){

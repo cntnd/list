@@ -63,10 +63,13 @@ if ($editmode){
       }
       // UPDATE
       else if(array_key_exists('action',$_POST) && array_key_exists('key',$_POST)) {
-        $keyToUpdate=$_POST['key'];
         $dataToUpdate=json_decode(base64_decode($_POST['data']), true);
-        var_dump($dataToUpdate);
-        $values = $cntndList->update($_POST['action'],$keyToUpdate,$dataToUpdate,$values);
+        $values = $cntndList->update($_POST['action'],$_POST['key'],$dataToUpdate,$values);
+      }
+      // REORDER
+      if(array_key_exists('reorder',$_POST) && !empty($_POST['reorder'])) {
+        $dataToReorder=json_decode(base64_decode($_POST['reorder']), true);
+        $values = $cntndList->reorder($dataToReorder,$values);
       }
     }
   }
@@ -90,9 +93,15 @@ if ($editmode){
       ?>
       <!-- onclick="javascript:document.getElementById('LIST_<?= $listname ?>').submit();" -->
   		<button class="btn btn-primary" type="submit"><?= mi18n("ADD") ?></button>
-  		<button class="btn btn-dark" type="button"><?= mi18n("REFRESH") ?></button>
   	</form>
     <hr />
+    <form data-uuid="<?= $entryFormId ?>" id="<?= $entryFormId ?>" name="<?= $entryFormId ?>" method="post">
+      <input type="hidden" name="key" />
+      <input type="hidden" name="data" />
+      <input type="hidden" name="action" />
+      <input type="hidden" name="reorder" />
+      <button class="btn btn-dark hide" type="submit"><?= mi18n("REFRESH") ?></button>
+    </form>
     <div id="cntnd_list_items-<?= $listname ?>">
     <?php
       foreach ($values as $key => $value) {
@@ -110,12 +119,6 @@ if ($editmode){
     ?>
     </div>
     <?= $cntndList->doSortable() ?>
-    <form data-uuid="<?= $entryFormId ?>" id="<?= $entryFormId ?>" name="<?= $entryFormId ?>" method="post">
-      <input type="hidden" name="key" />
-      <input type="hidden" name="data" />
-      <input type="hidden" name="action" />
-      <input type="hidden" name="reorder" />
-    </form>
     <?php
   }
 

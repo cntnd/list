@@ -4,6 +4,7 @@ CHOOSE_TEMPLATE=Bitte das Template auswählen ansonsten wird die Liste nicht ang
 LISTNAME=Name der Liste (default: cntnd_list)
 TEMPLATE=Template wählen:
 SAVE=Speichern
+REFRESH=Aktualisieren
 ADD=Hinzufügen
 DELETE=Löschen
 SWAP=Verschieben
