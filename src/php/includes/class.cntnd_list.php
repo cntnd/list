@@ -159,15 +159,15 @@ class CntndList {
           $this->doDownloadLinkField($name, $field, $extra);
           break;
       case 'titel':
-          $this->doTitelField($name, $field);
-          break;/*
+          $this->doTitleField($name, $field);
+          break;
       case 'plain':
-          $this->doPlainField($this->tplName($field['name']),$value);
+          $this->doPlainField($name, $field);
           break;
       case 'text':
       case 'textarea':
-          $this->doField($this->tplName($field['name']),$value,$field['extra']);
-          break;*/
+          $this->doField($name, $field, $extra);
+          break;
     }
   }
 
@@ -175,7 +175,37 @@ class CntndList {
     return str_replace(array("{","}"),"",$name);
   }
 
-  private function doTitelField($name, $field){
+  private function doField($name,$field,$extra=false){
+    if (!empty($field['value'])){
+      // Extended > - lorem = List, etc.
+      if ($extra){
+        $arr = explode("\n", $field['value']);
+        $text = '<ul>';
+        foreach($arr as $value){
+          $text .= '<li>'.$value.'</li>';
+        }
+        $text .= '</ul>';
+      }
+      else {
+        $text = $field['value'];
+      }
+        $this->tpl->set('d', $name, '<div class="'.$this->listname.' cntnd_text">'.stripslashes($text).'</div>');
+    }
+    else {
+        $this->tpl->set('d', $name, "");
+    }
+  }
+
+  private function doPlainField($name,$field){
+    if (!empty($field['value'])){
+        $this->tpl->set('d', $name, $field['value']);
+    }
+    else {
+        $this->tpl->set('d', $name, "");
+    }
+  }
+
+  private function doTitleField($name, $field){
     if (!empty($value['value'])){
         $this->tpl->set('d', $name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
     }
@@ -193,7 +223,7 @@ class CntndList {
     }
   }
 
-  private function doDownloadLinkField($name, $field, $extra){
+  private function doDownloadLinkField($name, $field, $extra=false){
     if (!empty($field['value']) AND $field['value']!=0){
       $target="_self";
       if ($field['value']!=999999999 AND $field['value']!=111111111 AND $field['value']!=222222222){
