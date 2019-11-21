@@ -1,6 +1,6 @@
 <script>
 $( document ).ready(function() {
-  // toJSON is not CORRECT!!!
+  // todo toJSON is not CORRECT!!!
   function toJSON(form) {
       var allowedInputElements = ['input','textarea','select'];
       var o = {};
@@ -19,7 +19,7 @@ $( document ).ready(function() {
           }
         }
       };
-      return JSON.stringify(o);
+      return JSON.stringify(o)
   };
 
   function gatherElements(uuid,key){

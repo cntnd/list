@@ -54,10 +54,6 @@ $values = $cntndList->load();
 // module
 if ($editmode){
   if ($_POST){
-    echo '<strong>POST</strong>';
-    echo '<pre>';
-    var_dump($_POST);
-    echo '</pre>';
     if (array_key_exists('data',$_POST)){
       // INSERT
       if (array_key_exists($listname,$_POST['data'])){
@@ -67,11 +63,9 @@ if ($editmode){
       }
       else if(array_key_exists('action',$_POST) && array_key_exists('key',$_POST)) {
         $keyToUpdate=$_POST['key'];
-        $dataToUpdate=json_decode(base64_decode($_POST['data']));
-        echo '<strong>DO: '.$_POST['action'].'</strong>';
-        echo '<pre>';
+        $dataToUpdate=json_decode(base64_decode($_POST['data']), true);
         var_dump($dataToUpdate);
-        echo '</pre>';
+        $values = $cntndList->update($_POST['action'],$keyToUpdate,$dataToUpdate,$values);
       }
     }
   }

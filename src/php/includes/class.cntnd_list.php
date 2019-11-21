@@ -100,6 +100,22 @@ class CntndList {
     $this->db->query($sql, $values);
   }
 
+  public function update($action, $index, $data, $values){
+    if ($action=='delete'){
+      unset($values[$index]);
+    }
+    elseif ($action=='update') {
+      foreach ($values[$index] as $key => $value) {
+        foreach ($value as $valueKey => $valueValue) {
+          $values[$index][$key][$valueKey]=$data["data[$index][$this->listname][$key][$valueKey]"];
+        }
+      }
+    }
+    $serializeddata = json_encode($values);
+    $this->store($serializeddata);
+    return $values;
+  }
+
   public function render($template, $data){
     $this->tpl->reset();
     if (is_array($data)){

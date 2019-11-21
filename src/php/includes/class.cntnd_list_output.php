@@ -65,7 +65,9 @@ class CntndListOutput {
 
   public function entry($fieldName,$label,$key,$field,$listname){
     $name = 'data['.$key.']['.$listname.']['.$fieldName.']';
-    return $this->renderInput($name, $field['type'], $label, $field);
+    $input = $this->renderInput($name, $field['type'], $label, $field);
+    $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$field['type'].'" />';
+    return $input;
   }
 
   private function renderInput($name, $type, $label, $value=false){
@@ -77,7 +79,7 @@ class CntndListOutput {
     $input = '';
     switch($type){
       case 'internal':
-          $input.= '<input type="'.self::inputType($type).'" name="'.$name.'" value="'.$valueValue.'" />';
+          $input.= '<input type="'.self::inputType($type).'" name="'.$valueName.'" value="'.$valueValue.'" />';
           break;
       case 'textarea':
           $input.= '<div class="form-group">';
