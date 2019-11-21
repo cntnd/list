@@ -36,7 +36,7 @@ class CntndListOutput {
 
     $input.= '<div class="form-group">';
     $input.= '<label><i>Pfad (URL, idart):</i></label>';
-    $input.= '<input type="text" name="'.$name.'[idart]" value="'.$value['idart'].'" />';
+    $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" />';
     $input.= '</div>';
     return $input;
   }

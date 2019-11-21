@@ -11,6 +11,7 @@ class CntndList {
   private $listname;
   private $db;
   private $tpl;
+  private $uploadDir;
 
   protected $medien=array();
   protected $images=array();
@@ -20,8 +21,12 @@ class CntndList {
     $this->idart = $idart;
     $this->lang = $lang;
     $this->listname = $listname;
+    $this->client = $client;
     $this->db = new cDb;
     $this->tpl = new Template();
+
+    $cfgClient = cRegistry::getClientConfig();
+    $this->uploadDir = $cfgClient[$client]["upl"]["htmlpath"];
 
     // medien, images, folders
     $cfg = cRegistry::getConfig();
@@ -180,7 +185,28 @@ class CntndList {
 
   private function doDownloadLinkField($name, $field, $icons=true){
     if (!empty($field['value']) AND $field['value']!=0){
-      $link_tag = '<a class="'.$this->listname.' cntnd_link" href="'.$link.'" target="'.$target.'">';
+      $target="_self";
+      if ($field['value']!=999999999 AND $field['value']!=111111111 AND $field['value']!=222222222){
+          $filename = $this->medien[$field['value']]['filename'];
+          $link = $this->uploadDir.$filename;
+          $icon = substr($filename,strrpos($filename,".")+1);
+          $target="_blank";
+      }
+      if ($field['value']==111111111){
+          $link = $field['link'];
+          $icon = "link";
+          $target="_blank";
+      }
+      if ($field['value']==222222222){
+          $link = "front_content.php?idart=".$field['link'];
+          $icon = "linkintern";
+      }
+      $pikto='';
+      if ($field['value']!=999999999 && $icons){
+          $pikto = 'pikto-after pikto--'.self::getLinkIcon($icon);
+      }
+
+      $link_tag = '<a class="'.$this->listname.' cntnd_link '.$pikto.'" href="'.$link.'" target="'.$target.'">';
       $this->tpl->set('d', $name, $link_tag);
       $this->tpl->set('d', "_".$name."_end", '</a>');
     }
@@ -188,6 +214,38 @@ class CntndList {
       $this->tpl->set('d', $name, "");
       $this->tpl->set('d', "_".$name."_end", '');
     }
+  }
+
+  private static function getLinkIcon($icon){
+    switch ($icon){
+      case 'doc':
+      case 'docx':
+      case 'dot':
+      case 'dotx':
+              return "word";
+      case 'xls':
+      case 'xlsx':
+              return "excel";
+      case 'pdf':
+              return "pdf";
+      case 'ppt':
+      case 'pptx':
+      case 'pps':
+      case 'ppsx':
+              return "powerpoint";
+      case 'qt':
+      case 'avi':
+      case 'mpeg':
+              return "video";
+      case 'zip':
+              return "zip";
+      case 'link':
+              return "link";
+      case 'linkintern':
+              return "link-intern";
+      default:
+              return "default";
+  }
   }
 
   public function doSortable(){
