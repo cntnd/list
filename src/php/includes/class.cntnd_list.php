@@ -117,7 +117,6 @@ class CntndList {
   }
 
   public function reorder($data, $values){
-    var_dump($data);
     if (is_array($data)){
       $reordered=[];
       foreach ($data as $value) {
