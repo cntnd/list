@@ -176,6 +176,20 @@ class CntndList {
       $this->tpl->set('d', "_".$name."_end", '');
     }
   }
+
+  public function doSortable(){
+    echo '<script>'."\n";
+    echo 'function onReordering(uuid){
+            var order=[];
+            $("#cntnd_list_items-"+uuid+" .listitem").each(function(index){
+              order.push({new:index,old:$(this).data("order")});
+            });
+            $("#ENTRY_"+uuid+" input[name=reorder]").val(order);
+          };'."\n";
+    echo "var elements = document.getElementById('cntnd_list_items-$this->listname');\n";
+    echo "var sortable = Sortable.create(elements, { draggable: '.listitem', onEnd: function(){ onReordering('$this->listname') }});\n";
+    echo '</script>'."\n";
+  }
 }
 
 ?>

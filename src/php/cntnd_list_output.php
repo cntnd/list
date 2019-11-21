@@ -61,6 +61,7 @@ if ($editmode){
         $serializeddata = json_encode($values);
         $cntndList->store($serializeddata);
       }
+      // UPDATE
       else if(array_key_exists('action',$_POST) && array_key_exists('key',$_POST)) {
         $keyToUpdate=$_POST['key'];
         $dataToUpdate=json_decode(base64_decode($_POST['data']), true);
@@ -89,11 +90,13 @@ if ($editmode){
       ?>
       <!-- onclick="javascript:document.getElementById('LIST_<?= $listname ?>').submit();" -->
   		<button class="btn btn-primary" type="submit"><?= mi18n("ADD") ?></button>
+  		<button class="btn btn-dark" type="button"><?= mi18n("REFRESH") ?></button>
   	</form>
     <hr />
+    <div id="cntnd_list_items-<?= $listname ?>">
     <?php
       foreach ($values as $key => $value) {
-        echo '<div class="listitem">'."\n";
+        echo '<div class="listitem" data-order="'.$key.'">'."\n";
         $index=0;
         foreach ($value as $name => $field) {
           $label = 'data['.$index.'][label]';
@@ -105,10 +108,13 @@ if ($editmode){
         echo '</div>'."\n";
       }
     ?>
+    </div>
+    <?= $cntndList->doSortable() ?>
     <form data-uuid="<?= $entryFormId ?>" id="<?= $entryFormId ?>" name="<?= $entryFormId ?>" method="post">
       <input type="hidden" name="key" />
       <input type="hidden" name="data" />
       <input type="hidden" name="action" />
+      <input type="hidden" name="reorder" />
     </form>
     <?php
   }

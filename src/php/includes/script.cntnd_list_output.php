@@ -1,6 +1,6 @@
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.1/Sortable.min.js"></script>
 <script>
 $( document ).ready(function() {
-  // todo toJSON is not CORRECT!!!
   function toJSON(form) {
       var allowedInputElements = ['input','textarea','select'];
       var o = {};
@@ -39,12 +39,6 @@ $( document ).ready(function() {
     }
     return data;
   }
-
-  $('form').submit(function() {
-      console.log('SUBMIT');
-      console.log($(this).data('uuid'));
-      return true;
-  });
 
   $('.cntnd_list_action').click(function(){
     var uuid = $(this).data('uuid');
