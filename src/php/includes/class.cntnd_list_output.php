@@ -34,9 +34,17 @@ class CntndListOutput {
     if (!$value){
       $value=array('value'=>'','link'=>'');
     }
-    $list = $this->documents;
     if ($extra=='images'){
       $list = $this->images;
+    }
+    else if($extra=='documents') {
+      $list = $this->documents;
+    }
+    else {
+      if (empty($value['value'])){
+        $value['value']=111111111;
+      }
+      $list = array();
     }
     $input = $this->dropdownMedia($name,$label,$list,'filename',$value['value'],false,true,true);
     // auch target als dropdown!!!

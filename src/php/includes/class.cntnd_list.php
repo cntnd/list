@@ -152,11 +152,22 @@ class CntndList {
 
   private function renderField($name, $field, $extra){
     switch($field['type']){
-      case 'linktext':
-          $this->doLinkField($name, $field);
-          break;
       case 'downloadlink':
           $this->doDownloadLinkField($name, $field, $extra);
+          break;
+      case 'url':
+          $this->doUrlField($name, $field, $extra);
+          break;
+          /*
+      case 'image':
+          $this->doDownloadLinkField($name, $field, $extra);
+          break;
+      case 'gallery':
+          $this->doDownloadLinkField($name, $field, $extra);
+          break;
+          */
+      case 'linktext':
+          $this->doLinkField($name, $field);
           break;
       case 'titel':
           $this->doTitleField($name, $field);
@@ -173,6 +184,30 @@ class CntndList {
 
   private static function tplName($name){
     return str_replace(array("{","}"),"",$name);
+  }
+
+  private function doUrlField($name,$field,$extra){
+    if (!empty($field['value'])){
+      $list = $this->medien;
+      if ($extra=='images'){
+        $list = $this->images;
+      }
+
+      if ($field['value']==111111111){
+        $link = $field['link'];
+      }
+      else if ($field['value']==222222222){
+        $link = "front_content.php?idart=".$field['link'];
+      }
+      else {
+        $filename = $list[$field['value']]['filename'];
+        $link = $this->uploadDir.$filename;
+      }
+      $this->tpl->set('d', $name, $link);
+    }
+    else {
+      $this->tpl->set('d', $name, "");
+    }
   }
 
   private function doField($name,$field,$extra=false){
