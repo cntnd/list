@@ -56,7 +56,7 @@ class CntndListOutput {
     return $input;
   }
 
-  private function images($label, $name, $value, $extra){
+  private function image($label, $name, $value, $extra){
     if (!$value){
       $value=array('value'=>'','comment'=>'');
     }
@@ -169,7 +169,7 @@ class CntndListOutput {
           $input.= $this->url($label,$name,$value,$extra);
           break;
       case 'image':
-          $input.= $this->images($label,$name,$value,$extra);
+          $input.= $this->image($label,$name,$value,$extra);
           break;
       case 'gallery':
           $input.= $this->gallery($label,$name,$value,$extra);

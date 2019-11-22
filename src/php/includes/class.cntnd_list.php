@@ -158,10 +158,10 @@ class CntndList {
       case 'url':
           $this->doUrlField($name, $field, $extra);
           break;
-          /*
       case 'image':
-          $this->doDownloadLinkField($name, $field, $extra);
+          $this->doImageField($name, $field, $extra);
           break;
+          /*
       case 'gallery':
           $this->doDownloadLinkField($name, $field, $extra);
           break;
@@ -184,6 +184,22 @@ class CntndList {
 
   private static function tplName($name){
     return str_replace(array("{","}"),"",$name);
+  }
+
+  private function doImageField($name,$field,$extra){
+    if (!empty($field['value'])){
+      $alt="";
+      if ($extra){
+        $alt = 'alt="'.$field['comment'].'"';
+        $this->tpl->set('d', "_comment_".$name, $field['comment']);
+      }
+      $img = '<img src="'.$this->uploadDir.$this->images[$field['value']]['filename'].'" class="'.$this->listname.' cntnd_img" '.$alt.' />';
+      $this->tpl->set('d', $name, $img);
+    }
+    else {
+      $this->tpl->set('d', $name, "");
+      $this->tpl->set('d', "_comment_".$name, "");
+    }
   }
 
   private function doUrlField($name,$field,$extra){
