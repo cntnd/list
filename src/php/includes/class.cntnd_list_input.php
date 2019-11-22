@@ -32,7 +32,7 @@ class CntndListInput {
   }
 
   public static function isExtraField($type){
-    return ($type=="downloadlink" OR $type=="textarea");
+    return ($type=="downloadlink" OR $type=="textarea" OR $type=="url" OR $type=="image" OR $type=="gallery");
   }
 
   public static function getExtraFields($type,$value,$dirs){

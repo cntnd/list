@@ -15,7 +15,7 @@ class CntndListOutput {
     $this->imageFolders=$imageFolders;
   }
 
-  private static function downloadlink($label, $name, $value){
+  private function downloadlink($label, $name, $value){
     if (!$value){
       $value=array('value'=>'','link'=>'');
     }
@@ -30,7 +30,7 @@ class CntndListOutput {
     return $input;
   }
 
-  private static function url($label, $name, $value, $extra){
+  private function url($label, $name, $value, $extra){
     if (!$value){
       $value=array('value'=>'','link'=>'');
     }
@@ -48,7 +48,7 @@ class CntndListOutput {
     return $input;
   }
 
-  private static function images($label, $name, $value, $extra){
+  private function images($label, $name, $value, $extra){
     if (!$value){
       $value=array('value'=>'','comment'=>'');
     }
@@ -63,7 +63,7 @@ class CntndListOutput {
     return $input;
   }
 
-  private static function gallery($label, $name, $value, $extra){
+  private function gallery($label, $name, $value, $extra){
     if (!$value){
       $value=array('value'=>'','link'=>'','thumbnail'=>'');
     }
@@ -155,16 +155,16 @@ class CntndListOutput {
           $input.= '</div>';
           break;
       case 'downloadlink':
-          $input.= self::downloadlink($label,$name,$value);
+          $input.= $this->downloadlink($label,$name,$value);
           break;
       case 'url':
-          $input.= self::url($label,$name,$value,$extra);
+          $input.= $this->url($label,$name,$value,$extra);
           break;
-      case 'images':
-          $input.= self::images($label,$name,$value,$extra);
+      case 'image':
+          $input.= $this->images($label,$name,$value,$extra);
           break;
       case 'gallery':
-          $input.= self::gallery($label,$name,$value,$extra);
+          $input.= $this->gallery($label,$name,$value,$extra);
           break;
       default:
           $input.= '<div class="form-group">';
