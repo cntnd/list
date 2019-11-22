@@ -97,7 +97,7 @@ class CntndListInput {
             $extras[0]['value']='link';
             $extras[0]['text'] ='nur Link anzeigen';
             $extras[1]['value']='thumbnail';
-            $extras[1]['text'] ='Vorschaubild auswählen';
+            $extras[1]['text'] ='nur Vorschaubild anzeigen';
 
             $ret= '<option value="0">  --bitte wählen-- </option> ';
             foreach ($extras as $extra){

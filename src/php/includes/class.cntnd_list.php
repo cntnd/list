@@ -186,6 +186,7 @@ class CntndList {
 
   private function doGalleryField($name,$field,$extra){
     if (!empty($field['value'])){
+      $gallery = "";
       $galleryId = 'gallery'.rand(100,999);
       $cfg = cRegistry::getConfig();
       $dirname = $this->folders[$field['value']]['dirname'];
@@ -193,35 +194,53 @@ class CntndList {
       while ($this->db->nextRecord()) {
       	$file = $this->db->f('filename');
       	if (!empty($file)){
-					$pictures .= "'".$this->uploadDir.$dirname.$file."',";
+          if (!empty($extra)){
+					  $pictures .= "'".$this->uploadDir.$dirname.$file."',";
+          }
+          else {
+            $gallery .= doImage($this->uploadDir.$dirname.$file,
+                                $this->uploadDir.$dirname.'thumb/'.$file,
+                                $galleryId);
+          }
 				}
 			}
 
-      $javascript= "<script language=\"\" type=\"text/javascript\">
-              			<!--
-              			$( document ).ready(function() {
-              				$('#".$galleryId."').click(function() {
-              					$.fancybox([
-              						".substr($pictures, 0, -1)."
-              					], {
-              						'padding'			: 0,
-              						'transitionIn'		: 'none',
-              						'transitionOut'		: 'none',
-              						'type'              : 'image',
-              						'changeFade'        : 0
-              					});
-              				});
-              			});
-              			-->
-              			</script>";
-
-      $this->tpl->set('d', '_javascript', $javascript);
-      $this->tpl->set('d', '_gallery_id', $galleryId);
+      if (!empty($extra)){
+        $gallery = $galleryId;
+        $javascript= '<script language="javascript" type="text/javascript">
+                			<!--
+                			$(document).ready(function() {
+                				$("#'.$galleryId.'").click(function() {
+                					$.fancybox(['.substr($pictures, 0, -1).']);
+                				});
+                			});
+                			-->
+                			</script>';
+        $this->tpl->set('d', '_'.$name.'_js', $javascript);
+      }
+      $this->tpl->set('d', $name, $gallery);
     }
     else {
-      $this->tpl->set('d', '_javascript', "");
-      $this->tpl->set('d', '_gallery_id', "");
+      $this->tpl->set('d', '_'.$name.'_js', "");
+      $this->tpl->set('d', $name, "");
     }
+  }
+
+  private function doImage($image,$gallery='',$thumb='',$comment=''){
+    $caption='';
+    if (!empty($comment)){
+      $caption = 'data-caption="'.$comment.'"';
+    }
+    if (!empty($thumb)){
+      $thumb = $image;
+    }
+    $fancybox='data-fancybox';
+    if (!empty($gallery)){
+      $fancybox='data-fancybox="'.$gallery.'"';
+    }
+    echo '<a href="'.$image.'" '.$fancybox.' '.$caption.' class="'.$this->listname.' cntnd_gallery">'."\n";
+    echo '<img src="'.$thumb.'" class="'.$this->listname.' cntnd_img" />'."\n";
+    echo '</a>'."\n";
   }
 
   private function doImageField($name,$field,$extra){
