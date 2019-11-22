@@ -5,38 +5,104 @@
  */
 class CntndListOutput {
 
-  protected $medien=array();
+  protected $documents=array();
+  protected $images=array();
+  protected $imageFolders=array();
 
-  function __construct($medien) {
-    $this->medien=$medien;
+  function __construct($documents,$images,$imageFolders) {
+    $this->documents=$documents;
+    $this->images=$images;
+    $this->imageFolders=$imageFolders;
   }
 
-  private static function downloadlink($label, $name, $value, $list){
+  private static function downloadlink($label, $name, $value){
     if (!$value){
-      $value=array('value'=>'','idart'=>'');
+      $value=array('value'=>'','link'=>'');
     }
-    $input = '<div class="form-group">';
-    $input.= '<label>'.$label.'</label>';
-    $input.= '<select name="'.$name.'[value]">'."\n";
-    $input.= '<option value="0">-- kein --</option>'."\n";
-    ($value['value'] == 999999999) ? $sel = ' selected="selected"' : $sel = '';
-    $input.= '<option value="999999999" '.$sel.'> -ohne Download/Link- </option>'."\n";
-    ($value['value'] == 111111111) ? $sel = ' selected="selected"' : $sel = '';
-    $input.= '<option value="111111111" '.$sel.'> -Link- </option>'."\n";
-    ($value['value'] == 222222222) ? $sel = ' selected="selected"' : $sel = '';
-    $input.= '<option value="222222222" '.$sel.'> -Link intern (idart=)- </option>'."\n";
-    foreach ($list as $medium) {
-       ($value['value'] == $medium['idupl']) ? $sel = ' selected="selected"' : $sel = '';
-       $input.= '<option value="'.$medium['idupl'].'" '.$sel.'>'.$medium['filename'].'</option>'."\n";
-    }
-    $input.= '</select>'."\n";
-    $input.= '</div>';
+    $input = $this->dropdownMedia($name,$label,$this->documents,'filename',$value['value'],true,true,true);
 
     // auch target als dropdown!!!
 
     $input.= '<div class="form-group">';
     $input.= '<label><i>Pfad (URL, idart):</i></label>';
     $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" />';
+    $input.= '</div>';
+    return $input;
+  }
+
+  private static function url($label, $name, $value, $extra){
+    if (!$value){
+      $value=array('value'=>'','link'=>'');
+    }
+    $list = $this->documents;
+    if ($extra=='images'){
+      $list = $this->images;
+    }
+    $input = $this->dropdownMedia($name,$label,$list,'filename',$value['value'],false,true,true);
+    // auch target als dropdown!!!
+
+    $input.= '<div class="form-group">';
+    $input.= '<label><i>URL (oder idart):</i></label>';
+    $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" placeholder="URL mit http"/>';
+    $input.= '</div>';
+    return $input;
+  }
+
+  private static function images($label, $name, $value, $extra){
+    if (!$value){
+      $value=array('value'=>'','comment'=>'');
+    }
+    $input = $this->dropdownMedia($name,$label,$this->images,'filename',$value['value']);
+
+    if ($extra){
+      $input.= '<div class="form-group">';
+      $input.= '<label><i>Kommentar:</i></label>';
+      $input.= '<input type="text" name="'.$name.'[comment]" value="'.$value['comment'].'" />';
+      $input.= '</div>';
+    }
+    return $input;
+  }
+
+  private static function gallery($label, $name, $value, $extra){
+    if (!$value){
+      $value=array('value'=>'','link'=>'','thumbnail'=>'');
+    }
+    $input = $this->dropdownMedia($name,$label,$this->imageFolders,'dirname',$value['value']);
+
+    if ($extra=='link'){
+      $input.= '<div class="form-group">';
+      $input.= '<label><i>Linktitel:</i></label>';
+      $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" />';
+      $input.= '</div>';
+    }
+    else if ($extra=='thumbnail'){
+      $input.= $this->dropdownMedia($name.'[thumbnail]','<i>Vorschaubild:</i>',$this->images,'filename',$value['thumbnail']);
+    }
+    return $input;
+  }
+
+  private function dropdownMedia($name,$label,$list,$labelList,$value,$without=false,$link=false,$internal=false){
+    $input = '<div class="form-group">';
+    $input.= '<label>'.$label.'</label>';
+    $input.= '<select name="'.$name.'[value]">'."\n";
+    $input.= '<option value="0">-- kein --</option>'."\n";
+    if ($without){
+      ($value == 999999999) ? $sel = ' selected="selected"' : $sel = '';
+      $input.= '<option value="999999999" '.$sel.'> -ohne Download/Link- </option>'."\n";
+    }
+    if ($link){
+      ($value == 111111111) ? $sel = ' selected="selected"' : $sel = '';
+      $input.= '<option value="111111111" '.$sel.'> -Link- </option>'."\n";
+    }
+    if ($internal){
+      ($value == 222222222) ? $sel = ' selected="selected"' : $sel = '';
+      $input.= '<option value="222222222" '.$sel.'> -Link intern (idart=)- </option>'."\n";
+    }
+    foreach ($list as $medium) {
+       ($value == $medium['idupl']) ? $sel = ' selected="selected"' : $sel = '';
+       $input.= '<option value="'.$medium['idupl'].'" '.$sel.'>'.$medium[$labelList].'</option>'."\n";
+    }
+    $input.= '</select>'."\n";
     $input.= '</div>';
     return $input;
   }
@@ -59,19 +125,19 @@ class CntndListOutput {
     $name = 'data['.$listname.']['.$data[$field].']';
     $valueName = $name.'[value]';
 
-    $input = $this->renderInput($name, $data[$type], $data[$label]);
+    $input = $this->renderInput($name, $data[$type], $data[$label], $data[$extra]);
     $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$data[$type].'" />';
     return $input;
   }
 
-  public function entry($fieldName,$label,$key,$field,$listname){
+  public function entry($fieldName,$label,$key,$field,$listname,$extra=''){
     $name = 'data['.$key.']['.$listname.']['.$fieldName.']';
-    $input = $this->renderInput($name, $field['type'], $label, $field);
+    $input = $this->renderInput($name, $field['type'], $label, $extra, $field);
     $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$field['type'].'" />';
     return $input;
   }
 
-  private function renderInput($name, $type, $label, $value=false){
+  private function renderInput($name, $type, $label, $extra='', $value=false){
     $valueName = $name.'[value]';
     if ($value){
       $valueValue = $value['value'];
@@ -89,7 +155,16 @@ class CntndListOutput {
           $input.= '</div>';
           break;
       case 'downloadlink':
-          $input.= self::downloadlink($label,$name,$value,$this->medien);
+          $input.= self::downloadlink($label,$name,$value);
+          break;
+      case 'url':
+          $input.= self::url($label,$name,$value,$extra);
+          break;
+      case 'images':
+          $input.= self::images($label,$name,$value,$extra);
+          break;
+      case 'gallery':
+          $input.= self::gallery($label,$name,$value,$extra);
           break;
       default:
           $input.= '<div class="form-group">';

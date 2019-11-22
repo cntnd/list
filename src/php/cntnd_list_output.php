@@ -86,7 +86,7 @@ if ($editmode){
   	?>
   	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="<?= $formId ?>" method="post">
       <?php
-      $cntndListOutput = new CntndListOutput($cntndList->medien());
+      $cntndListOutput = new CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders());
       for ($index=0;$index<$count;$index++){
           echo $cntndListOutput->input($data,$values[$index],$index,$listname);
       }
@@ -109,7 +109,8 @@ if ($editmode){
         $index=0;
         foreach ($value as $name => $field) {
           $label = 'data['.$index.'][label]';
-          echo $cntndListOutput->entry($name,$data[$label],$key,$field,$listname);
+          $extra = 'data['.$index.'][extra]';
+          echo $cntndListOutput->entry($name,$data[$label],$key,$field,$listname,$data[$extra]);
           $index++;
         }
         echo '<button class="cntnd_list_action btn btn-primary" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="update">'.mi18n("SAVE").'</button>'."\n";
