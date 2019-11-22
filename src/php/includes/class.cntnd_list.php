@@ -191,14 +191,12 @@ class CntndList {
       $alt="";
       if ($extra){
         $alt = 'alt="'.$field['comment'].'"';
-        $this->tpl->set('d', "_comment_".$name, $field['comment']);
       }
       $img = '<img src="'.$this->uploadDir.$this->images[$field['value']]['filename'].'" class="'.$this->listname.' cntnd_img" '.$alt.' />';
       $this->tpl->set('d', $name, $img);
     }
     else {
       $this->tpl->set('d', $name, "");
-      $this->tpl->set('d', "_comment_".$name, "");
     }
   }
 
