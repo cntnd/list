@@ -161,11 +161,9 @@ class CntndList {
       case 'image':
           $this->doImageField($name, $field, $extra);
           break;
-          /*
       case 'gallery':
-          $this->doDownloadLinkField($name, $field, $extra);
+          $this->doGalleryField($name, $field, $extra);
           break;
-          */
       case 'linktext':
           $this->doLinkField($name, $field);
           break;
@@ -184,6 +182,46 @@ class CntndList {
 
   private static function tplName($name){
     return str_replace(array("{","}"),"",$name);
+  }
+
+  private function doGalleryField($name,$field,$extra){
+    if (!empty($field['value'])){
+      $galleryId = 'gallery'.rand(100,999);
+      $cfg = cRegistry::getConfig();
+      $dirname = $this->folders[$field['value']]['dirname'];
+      $this->db->query("SELECT filename FROM ".$cfg["tab"]["upl"]." WHERE dirname = '".$dirname."' AND filetype != '' ORDER BY filename ");
+      while ($this->db->nextRecord()) {
+      	$file = $this->db->f('filename');
+      	if (!empty($file)){
+					$pictures .= "'".$this->uploadDir.$dirname.$file."',";
+				}
+			}
+
+      $javascript= "<script language=\"\" type=\"text/javascript\">
+              			<!--
+              			$( document ).ready(function() {
+              				$('#".$galleryId."').click(function() {
+              					$.fancybox([
+              						".substr($pictures, 0, -1)."
+              					], {
+              						'padding'			: 0,
+              						'transitionIn'		: 'none',
+              						'transitionOut'		: 'none',
+              						'type'              : 'image',
+              						'changeFade'        : 0
+              					});
+              				});
+              			});
+              			-->
+              			</script>";
+
+      $this->tpl->set('d', '_javascript', $javascript);
+      $this->tpl->set('d', '_gallery_id', $galleryId);
+    }
+    else {
+      $this->tpl->set('d', '_javascript', "");
+      $this->tpl->set('d', '_gallery_id', "");
+    }
   }
 
   private function doImageField($name,$field,$extra){
