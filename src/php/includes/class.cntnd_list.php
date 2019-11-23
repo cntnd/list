@@ -218,7 +218,7 @@ class CntndList {
           $this->tpl->set('d', '_'.$name.'_thumbnail', $thumbnail);
         }
 
-        $javascript= '<script language="javascript" type="text/javascript">
+        $javascript ='<script language="javascript" type="text/javascript">
                 			<!--
                 			$(document).ready(function() {
                 				$("#'.$trigger.'").click(function() {
@@ -244,7 +244,7 @@ class CntndList {
     if (!empty($comment)){
       $caption = 'data-caption="'.$comment.'"';
     }
-    if (!empty($thumb)){
+    if (empty($thumb)){
       $thumb = $image;
     }
     $fancybox='data-fancybox';
@@ -252,17 +252,23 @@ class CntndList {
       $fancybox='data-fancybox="'.$gallery.'"';
     }
     echo '<a href="'.$image.'" '.$fancybox.' '.$caption.' class="'.$this->listname.' cntnd_gallery">'."\n";
-    echo '<img src="'.$thumb.'" class="'.$this->listname.' cntnd_img" />'."\n";
+    echo '<img src="'.$thumb.'" class="'.$this->listname.' cntnd_img" alt="'.$comment.'" />'."\n";
     echo '</a>'."\n";
   }
 
   private function doImageField($name,$field,$extra){
     if (!empty($field['value'])){
-      $alt="";
-      if ($extra){
-        $alt = 'alt="'.$field['comment'].'"';
+      $image = $this->uploadDir.$this->images[$field['value']]['filename'];
+      if (empty($extra) || $extra=='comment'){
+        $alt="";
+        if (!empty($extra)){
+          $alt = $field['comment'];
+        }
+        $img = '<img src="'.$image.'" class="'.$this->listname.' cntnd_img" alt="'.$alt.'" />';
       }
-      $img = '<img src="'.$this->uploadDir.$this->images[$field['value']]['filename'].'" class="'.$this->listname.' cntnd_img" '.$alt.' />';
+      else if ($extra=='gallery') {
+        $img = $this->doImage($image,$this->listname,"",$field['comment']);
+      }
       $this->tpl->set('d', $name, $img);
     }
     else {

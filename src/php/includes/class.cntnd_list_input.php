@@ -81,8 +81,10 @@ class CntndListInput {
           }
           break;
       case 'image':
-          $extras[0]['value']=true;
+          $extras[0]['value']='comment';
           $extras[0]['text'] ='mit Kommentaren';
+          $extras[1]['value']='gallery';
+          $extras[1]['text'] ='Bilderstreifen mit Kommentaren';
 
           $ret= '<option value="0">  --bitte wählen-- </option> ';
           foreach ($extras as $extra){
