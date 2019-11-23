@@ -98,6 +98,8 @@ class CntndListInput {
             $extras[0]['text'] ='nur Link anzeigen';
             $extras[1]['value']='thumbnail';
             $extras[1]['text'] ='nur Vorschaubild anzeigen';
+            $extras[2]['value']='galleryonly';
+            $extras[2]['text'] ='nur Fotogalerie';
 
             $ret= '<option value="0">  --bitte wählen-- </option> ';
             foreach ($extras as $extra){

@@ -19,7 +19,7 @@ class CntndListOutput {
     if (!$value){
       $value=array('value'=>'','link'=>'');
     }
-    $input = $this->dropdownMedia($name,$label,$this->documents,'filename',$value['value'],true,true,true);
+    $input = $this->dropdownMedia($name.'[value]',$label,$this->documents,'filename',$value['value'],true,true,true);
 
     // auch target als dropdown!!!
 
@@ -46,7 +46,7 @@ class CntndListOutput {
       }
       $list = array();
     }
-    $input = $this->dropdownMedia($name,$label,$list,'filename',$value['value'],false,true,true);
+    $input = $this->dropdownMedia($name.'[value]',$label,$list,'filename',$value['value'],false,true,true);
     // auch target als dropdown!!!
 
     $input.= '<div class="form-group">';
@@ -60,7 +60,7 @@ class CntndListOutput {
     if (!$value){
       $value=array('value'=>'','comment'=>'');
     }
-    $input = $this->dropdownMedia($name,$label,$this->images,'filename',$value['value']);
+    $input = $this->dropdownMedia($name.'[value]',$label,$this->images,'filename',$value['value']);
 
     if ($extra){
       $input.= '<div class="form-group">';
@@ -75,7 +75,7 @@ class CntndListOutput {
     if (!$value){
       $value=array('value'=>'','link'=>'','thumbnail'=>'');
     }
-    $input = $this->dropdownMedia($name,$label,$this->imageFolders,'dirname',$value['value']);
+    $input = $this->dropdownMedia($name.'[value]',$label,$this->imageFolders,'dirname',$value['value']);
 
     if ($extra=='link'){
       $input.= '<div class="form-group">';
@@ -92,7 +92,7 @@ class CntndListOutput {
   private function dropdownMedia($name,$label,$list,$labelList,$value,$without=false,$link=false,$internal=false){
     $input = '<div class="form-group">';
     $input.= '<label>'.$label.'</label>';
-    $input.= '<select name="'.$name.'[value]">'."\n";
+    $input.= '<select name="'.$name.'">'."\n";
     $input.= '<option value="0">-- kein --</option>'."\n";
     if ($without){
       ($value == 999999999) ? $sel = ' selected="selected"' : $sel = '';

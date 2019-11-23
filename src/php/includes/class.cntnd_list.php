@@ -195,10 +195,10 @@ class CntndList {
       	$file = $this->db->f('filename');
       	if (!empty($file)){
           if (!empty($extra)){
-					  $pictures .= "'".$this->uploadDir.$dirname.$file."',";
+					  $pictures .= "{src:'".$this->uploadDir.$dirname.$file."'},";
           }
           else {
-            $gallery .= doImage($this->uploadDir.$dirname.$file,
+            $gallery .= $this->doImage($this->uploadDir.$dirname.$file,
                                 $this->uploadDir.$dirname.'thumb/'.$file,
                                 $galleryId);
           }
@@ -206,12 +206,23 @@ class CntndList {
 			}
 
       if (!empty($extra)){
+        $trigger = $galleryId;
         $gallery = $galleryId;
+        if ($extra=="link"){
+          $trigger.=" > .cntnd_link";
+          $link = '<a href="javascript:;" class="'.$this->listname.' cntnd_link cntnd_gallery">'.$field['link'].'</a>';
+          $this->tpl->set('d', '_'.$name.'_link', $link);
+        }
+        else if ($extra=="thumbnail"){
+          $thumbnail = '<img src="'.$this->uploadDir.$this->images[$field['thumbnail']]['filename'].'" class="'.$this->listname.' cntnd_img cntnd_gallery" />';
+          $this->tpl->set('d', '_'.$name.'_thumbnail', $thumbnail);
+        }
+
         $javascript= '<script language="javascript" type="text/javascript">
                 			<!--
                 			$(document).ready(function() {
-                				$("#'.$galleryId.'").click(function() {
-                					$.fancybox(['.substr($pictures, 0, -1).']);
+                				$("#'.$trigger.'").click(function() {
+                					$.fancybox.open(['.substr($pictures, 0, -1).']);
                 				});
                 			});
                 			-->
@@ -222,6 +233,8 @@ class CntndList {
     }
     else {
       $this->tpl->set('d', '_'.$name.'_js', "");
+      $this->tpl->set('d', '_'.$name.'_link', "");
+      $this->tpl->set('d', '_'.$name.'_thumbnail', "");
       $this->tpl->set('d', $name, "");
     }
   }

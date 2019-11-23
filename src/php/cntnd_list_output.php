@@ -45,7 +45,9 @@ $data = json_decode(base64_decode("CMS_VALUE[3]"), true);
 cInclude('module', 'includes/class.cntnd_list.php');
 cInclude('module', 'includes/class.cntnd_list_output.php');
 cInclude('module', 'includes/class.template.php');
-cInclude('module', 'includes/script.cntnd_list_output.php');
+if ($editmode){
+  cInclude('module', 'includes/script.cntnd_list_output.php');
+}
 
 // values
 $cntndList = new CntndList($idart, $lang, $client, $listname);
