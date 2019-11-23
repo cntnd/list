@@ -33,11 +33,23 @@ $( document ).ready(function() {
           }
           return false;
       });
-      var json = toJSON(elements);
-      console.log(json);
-      data = window.btoa(json);
+      data = window.btoa(toJSON(elements));
     }
     return data;
+  }
+
+  function checkElements(uuid){
+    var elements = $('#'+uuid+' *').filter(function(){
+        var name = $(this).attr('name');
+        var type = $(this).attr('type');
+        if (type!== undefined && type!='hidden' && name!==undefined && name.startsWith('data')){
+          if ($(this).val()!==undefined && $(this).val()!=='' && $(this).val()!=='0'){
+            return true;
+          }
+        }
+        return false;
+    });
+    return elements;
   }
 
   $('.cntnd_list_action').click(function(){
@@ -53,6 +65,20 @@ $( document ).ready(function() {
     $('#'+uuid+' input[name=data]').val(data);
     $('#'+uuid+' input[name=action]').val(action);
     $('#'+uuid).submit();
+  });
+
+  $('form').submit(function() {
+    var uuid = $(this).data('uuid');
+                console.log(uuid);
+    if (uuid.startsWith("LIST_")){
+      var elements = checkElements(uuid);
+      console.log('check',elements.length);
+      if (elements.length===0){
+        alert('check elements');
+        return false;
+      }
+    }
+    return true; // return false to cancel form action
   });
 });
 </script>
