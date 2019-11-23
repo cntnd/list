@@ -18,15 +18,16 @@ class CntndListInput {
 
     $choose_fields='<option value="NULL" '.$NULL.'> --bitte wählen-- </option>
                     <option value="internal" '.$internal.'> -internes Feld- </option>
-                    <option value="titel" '.$titel.'> Titel (Einzeilig) </option>
-                    <option value="text" '.$text.'> Eingabefeld (Einzeilig) </option>
-                    <option value="textarea" '.$textarea.'> Eingabefeld (Mehrzeilig) </option>
-                    <option value="plain" '.$plain.'> Eingabefeld (Plaintext) </option>
-                    <option value="linktext" '.$linktext.'> Eingabefeld (für Linktitel) </option>
-                    <option value="downloadlink" '.$downloadlink.'> Link-, Downloadfeld </option>
+                    <option value="titel" '.$titel.'> Titel (Einzeilig)</option>
+                    <option value="text" '.$text.'> Eingabefeld (Einzeilig)</option>
+                    <option value="textarea" '.$textarea.'> Eingabefeld (Mehrzeilig)</option>
+                    <option value="plain" '.$plain.'> Eingabefeld (Plaintext)</option>
+                    <option value="table" '.$table.'> Tabelle</option>
+                    <option value="linktext" '.$linktext.'> Eingabefeld (für Linktitel)</option>
+                    <option value="downloadlink" '.$downloadlink.'> Link-, Downloadfeld</option>
                     <option value="url" '.$url.'> URL (Webseite, Bild, Dokument, Link, etc.)</option>
-                    <option value="image" '.$image.'> Bild / Bilderstreifen (jedes Bild auswählen) </option>
-                    <option value="gallery" '.$gallery.'> Bildergalerie aus Ordner </option>';
+                    <option value="image" '.$image.'> Bild / Bilderstreifen (jedes Bild auswählen)</option>
+                    <option value="gallery" '.$gallery.'> Bildergalerie aus Ordner</option>';
 
     return $choose_fields;
   }

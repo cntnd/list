@@ -115,6 +115,15 @@ class CntndListOutput {
     return $input;
   }
 
+  private function table($label, $name, $value){
+    if (!$value){
+      $value=array('value'=>'');
+    }
+    $input = '';
+
+    return $input;
+  }
+
   private static function inputType($type){
     switch($type){
       case 'internal':
@@ -173,6 +182,9 @@ class CntndListOutput {
           break;
       case 'gallery':
           $input.= $this->gallery($label,$name,$value,$extra);
+          break;
+      case 'table':
+          $input.= $this->table($label,$name,$value);
           break;
       default:
           $input.= '<div class="form-group">';
