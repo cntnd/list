@@ -70,7 +70,11 @@ $( document ).ready(function() {
   $('form').submit(function() {
     $('#'+uuid+' > .cntnd_alert').addClass('hide');
     var uuid = $(this).data('uuid');
-    if (uuid.startsWith("LIST_") || uuid.startsWith("ENTRY_")){
+    console.log($(this).children('input[name=action]').val());
+    if (uuid.startsWith("ENTRY_") && $(this).children('input[name=action]').val()==='delete'){
+      return true;
+    }
+    else if (uuid.startsWith("LIST_") || uuid.startsWith("ENTRY_")){
       if (uuid.startsWith("ENTRY_")){
         uuid = uuid+'_'+$(this).children('input[name=key]').val();
       }
