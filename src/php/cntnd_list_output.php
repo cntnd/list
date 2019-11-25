@@ -79,7 +79,7 @@ if ($editmode){
 	echo '<div class="content_box"><label class="content_type_label">'.mi18n("MODULE").'</label>';
 
   if (!$template OR empty($template) OR $template=="false"){
-    echo '<div class="alert alert-info">'.mi18n("CHOOSE_TEMPLATE").'</div>';
+    echo '<div class="cntnd_alert cntnd_alert-primary">'.mi18n("NO_TEMPLATE_OUTPUT").'</div>';
   }
   else {
   	// input
@@ -87,6 +87,7 @@ if ($editmode){
     $entryFormId = "ENTRY_".$listname;
   	?>
   	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="<?= $formId ?>" method="post">
+      <div class="cntnd_alert cntnd_alert-danger hide"><?= mi18n("INVALID_FORM") ?></div>
       <?php
       $cntndListOutput = new CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders());
       for ($index=0;$index<$count;$index++){
@@ -107,7 +108,8 @@ if ($editmode){
     <div id="cntnd_list_items-<?= $listname ?>">
     <?php
       foreach ($values as $key => $value) {
-        echo '<div class="listitem" data-order="'.$key.'">'."\n";
+        echo '<div class="listitem" data-order="'.$key.'" id="'.$entryFormId.'_'.$key.'">'."\n";
+        echo '<div class="cntnd_alert cntnd_alert-danger hide">'.mi18n("INVALID_FORM").'</div>'."\n";
         $index=0;
         foreach ($value as $name => $field) {
           $label = 'data['.$index.'][label]';
@@ -116,6 +118,7 @@ if ($editmode){
           $index++;
         }
         echo '<button class="cntnd_list_action btn btn-primary" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="update">'.mi18n("SAVE").'</button>'."\n";
+        echo '<button class="cntnd_list_action btn btn-light" type="reset">'.mi18n("RESET") .'</button>'."\n";
         echo '<button class="cntnd_list_action btn" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="delete">'.mi18n("DELETE") .'</button>'."\n";
         echo '</div>'."\n";
       }

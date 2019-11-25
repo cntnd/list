@@ -1,5 +1,5 @@
 /* cntnd_list */
-@import url('https://cdn.jsdelivr.net/gh/cntnd/core_style/dist/core_style.css');
+@import url('https://cdn.jsdelivr.net/gh/cntnd/core_style@0.0.2/dist/core_style.css');
 
 .content_box,
 .listitem {
@@ -17,6 +17,10 @@
 
 .hide {
 	display: none !important;
+}
+
+.show {
+	display: block !important;
 }
 
 /* OUTPUT */

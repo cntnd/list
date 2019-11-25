@@ -68,13 +68,15 @@ $( document ).ready(function() {
   });
 
   $('form').submit(function() {
+    $('#'+uuid+' > .cntnd_alert').addClass('hide');
     var uuid = $(this).data('uuid');
-                console.log(uuid);
-    if (uuid.startsWith("LIST_")){
+    if (uuid.startsWith("LIST_") || uuid.startsWith("ENTRY_")){
+      if (uuid.startsWith("ENTRY_")){
+        uuid = uuid+'_'+$(this).children('input[name=key]').val();
+      }
       var elements = checkElements(uuid);
-      console.log('check',elements.length);
       if (elements.length===0){
-        alert('check elements');
+        $('#'+uuid+' > .cntnd_alert').toggleClass('hide');
         return false;
       }
     }

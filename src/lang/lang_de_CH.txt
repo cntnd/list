@@ -1,10 +1,13 @@
 MODULE=Dynamische List
 SELECT_CHOOSE=-bitte wählen-
 CHOOSE_TEMPLATE=Bitte das Template auswählen ansonsten wird die Liste nicht angezeigt.
+NO_TEMPLATE_OUTPUT=Bitte in der Konfiguration das Modul-Template auswählen ansonsten wird die Liste nicht angezeigt.
 LISTNAME=Name der Liste (default: cntnd_list)
 TEMPLATE=Template wählen:
 SAVE=Speichern
 REFRESH=Aktualisieren
 ADD=Hinzufügen
 DELETE=Löschen
+RESET=Zurücksetzen
 SWAP=Verschieben
+INVALID_FORM=Bitte mindestens einen Wert eingeben
