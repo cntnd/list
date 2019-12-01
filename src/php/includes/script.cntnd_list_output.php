@@ -70,8 +70,9 @@ $( document ).ready(function() {
   $('form').submit(function() {
     $('#'+uuid+' > .cntnd_alert').addClass('hide');
     var uuid = $(this).data('uuid');
-    console.log($(this).children('input[name=action]').val());
-    if (uuid.startsWith("ENTRY_") && $(this).children('input[name=action]').val()==='delete'){
+    if (uuid.startsWith("ENTRY_") &&
+            ($(this).children('input[name=action]').val()==='delete' ||
+             $(this).children('input[name=action]').val()==='reorder')){
       return true;
     }
     else if (uuid.startsWith("LIST_") || uuid.startsWith("ENTRY_")){
@@ -84,7 +85,7 @@ $( document ).ready(function() {
         return false;
       }
     }
-    return true; // return false to cancel form action
+    return true;
   });
 });
 </script>

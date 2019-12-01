@@ -420,8 +420,9 @@ class CntndList {
             $("#cntnd_list_items-"+uuid+" .listitem").each(function(index){
               order.push({new:index,old:$(this).data("order")});
             });
+            $("#ENTRY_"+uuid+" input[name=action]").val("reorder");
             $("#ENTRY_"+uuid+" input[name=reorder]").val(window.btoa(JSON.stringify(order)));
-            $("#ENTRY_"+uuid+" button[type=submit]").toggleClass("hide");
+            $("#ENTRY_"+uuid+" button[type=submit]").removeClass("hide");
           };'."\n";
     echo "var elements = document.getElementById('cntnd_list_items-$this->listname');\n";
     echo "var sortable = Sortable.create(elements, { draggable: '.listitem', onEnd: function(){ onReordering('$this->listname') }});\n";
