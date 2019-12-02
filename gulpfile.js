@@ -2,7 +2,9 @@ var gulp        = require('gulp');
 var sass        = require('gulp-sass');
 var minify      = require('gulp-minifier');
 var zip         = require('gulp-zip');
+var file        = require('gulp-file');
 var del         = require('del');
+var pkg         = require('./package.json');
 
 gulp.task('watch', function () {
     gulp.watch('src/scss/**/*.scss', gulp.series('sass'));
@@ -33,6 +35,28 @@ gulp.task('clean', function () {
   return del('dist/**/*');
 });
 
+// creates info.xml
+gulp.task('info-xml', function () {
+    var infoXml =
+        '<?xml version="1.0" encoding="UTF-8"?>\n' +
+        '<module>\n' +
+        '<name>'+pkg.name+'</name>\n' +
+        '<description>\n' +
+        pkg.name+'\n' +
+        pkg.description+'\n' +
+        '\n' +
+        'Autor '+pkg.author+'\n' +
+        '\n' +
+        'Version '+pkg.version+'\n' +
+        '</description>\n' +
+        '<type/>\n' +
+        '<alias>'+pkg.name+'</alias>\n' +
+        '</module>';
+
+    return file('info.xml', infoXml, {src: true})
+        .pipe(gulp.dest('src/'));
+});
+
 gulp.task('default', gulp.series('sass','watch'));
 
-gulp.task('dist', gulp.series('clean','sass','zip'));
+gulp.task('dist', gulp.series('clean','sass','info-xml','zip'));

@@ -9,7 +9,3 @@
 * `$lang = cRegistry::getLanguageId();`  
 * `mi18n("SELECT_ARTICLE")`
 * `buildArticleSelect("CMS_VAR[2]", $oModule->cmsCatID, $oModule->cmsArtID);`
-
-## todo
-
-* info xml (titel, description) muss befüllt werden mit gulp etc...

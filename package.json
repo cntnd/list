@@ -7,7 +7,8 @@
     "gulp": "^4.0.2",
     "gulp-minifier": "^2.0.0",
     "gulp-sass": "^4.0.2",
-    "gulp-zip": "^5.0.1"
+    "gulp-zip": "^5.0.1",
+    "gulp-file": "^0.4.0"
   },
   "repository": {
     "type": "git",

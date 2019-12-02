@@ -1,4 +1,4 @@
-/* cntnd_schedule */
+/* cntnd_list */
 $( document ).ready(function() {
 
 });
