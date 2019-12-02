@@ -49,11 +49,15 @@ class CntndListOutput {
       }
       $list = array();
     }
+    $disabled='disabled="disabled"';
+    if ($value['value']=='111111111' || $value['value']=='222222222') {
+      $disabled='';
+    }
     $input = $this->dropdownMedia($name.'[value]',$label,$list,'filename',$value['value'],false,true,true,$name.'[target]',$value['target']);
 
-    $input.= '<div class="form-group">';
-    $input.= '<label><i>URL (oder idart) - HIDE:</i></label>';
-    $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" placeholder="URL mit http"/>';
+    $input.= '<div class="form-group '.$this->listname.' cntnd_url_path">';
+    $input.= '<label><i>URL (oder idart):</i></label>';
+    $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" placeholder="URL mit http" '.$disabled.' />';
     $input.= '</div>';
     return $input;
   }

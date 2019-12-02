@@ -39,6 +39,7 @@ $( document ).ready(function() {
       return true; // return false to cancel form action
   });
 
+/*
   var duplicate=0;
   console.log($('#listname'));
   $('#listname').each(function(){
@@ -48,5 +49,6 @@ $( document ).ready(function() {
     }
     duplicate++;
   });
+*/
 });
 </script>

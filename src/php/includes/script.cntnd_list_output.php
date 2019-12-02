@@ -93,7 +93,7 @@ $( document ).ready(function() {
 
   $('.cntnd_dropdown_media').change(function(){
     var listname = $(this).data('listname');
-    var element = $('#LIST_'+listname+'.cntnd_url_path input');
+    var element = $('#LIST_'+listname+' .cntnd_url_path input');
     if ($(this).parents('.listitem').length>0){
       element = $(this).parents('.listitem').find('.cntnd_url_path input');
     }
