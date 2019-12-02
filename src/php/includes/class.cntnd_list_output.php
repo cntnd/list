@@ -19,10 +19,7 @@ class CntndListOutput {
     if (!$value){
       $value=array('value'=>'','link'=>'');
     }
-    $input = $this->dropdownMedia($name.'[value]',$label,$this->documents,'filename',$value['value'],true,true,true);
-
-    // auch target als dropdown!!!
-
+    $input = $this->dropdownMedia($name.'[value]',$label,$this->documents,'filename',$value['value'],true,true,true,$name.'[target]',$value['target']);
     $input.= '<div class="form-group">';
     $input.= '<label><i>Pfad (URL, idart):</i></label>';
     $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" />';
@@ -46,7 +43,7 @@ class CntndListOutput {
       }
       $list = array();
     }
-    $input = $this->dropdownMedia($name.'[value]',$label,$list,'filename',$value['value'],false,true,true);
+    $input = $this->dropdownMedia($name.'[value]',$label,$list,'filename',$value['value'],false,true,true,$name.'[target]',$value['target']);
     // auch target als dropdown!!!
 
     $input.= '<div class="form-group">';
@@ -89,8 +86,15 @@ class CntndListOutput {
     return $input;
   }
 
-  private function dropdownMedia($name,$label,$list,$labelList,$value,$without=false,$link=false,$internal=false){
-    $input = '<div class="form-group">';
+  private function dropdownMedia($name,$label,$list,$labelList,$value,$without=false,$link=false,$internal=false,$target='',$targetValue=''){
+    $w = '';
+    $input = '';
+    if ($link){
+      $w = 'w-75';
+      $input.= '<div class="d-flex justify-content-between">';
+    }
+
+    $input.= '<div class="form-group '.$w.'">';
     $input.= '<label>'.$label.'</label>';
     $input.= '<select name="'.$name.'">'."\n";
     $input.= '<option value="0">-- kein --</option>'."\n";
@@ -112,6 +116,30 @@ class CntndListOutput {
     }
     $input.= '</select>'."\n";
     $input.= '</div>';
+
+    if ($link && !empty($target)){
+      $input.= $this->urlTarget($target,$targetValue);
+      $input.= '</div>';
+    }
+    return $input;
+  }
+
+  private function urlTarget($name, $value){
+    $input = '<div class="form-group w-25">'."\n";
+    $input.= '<label><i>Target:</i></label>'."\n";
+    $input.= '<select name="'.$name.'">'."\n";
+    ($value == 'auto' || empty($value)) ? $sel = ' selected="selected"' : $sel = '';
+    $input.= '<option value="auto">-- automatisch --</option>'."\n";
+    ($value == '_blank') ? $sel = ' selected="selected"' : $sel = '';
+    $input.= '<option value="_blank" '.$sel.'> _blank (neues Fenster)</option>'."\n";
+    ($value == '_self') ? $sel = ' selected="selected"' : $sel = '';
+    $input.= '<option value="_self" '.$sel.'> _self (im gleichen Fenster)</option>'."\n";
+    ($value == '_parent') ? $sel = ' selected="selected"' : $sel = '';
+    $input.= '<option value="_parent" '.$sel.'> _parent (im "parent" Frame, bei iFrames)</option>'."\n";
+    ($value == '_top') ? $sel = ' selected="selected"' : $sel = '';
+    $input.= '<option value="_top" '.$sel.'> _top (im ganzen Frame, bei iFrames)</option>'."\n";
+    $input.= '</select>'."\n";
+    $input.= '</div>'."\n";
     return $input;
   }
 
