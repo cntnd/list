@@ -39,9 +39,13 @@ $( document ).ready(function() {
   }
 
   function checkElements(uuid){
+    console.log(uuid);
     var elements = $('#'+uuid+' *').filter(function(){
         var name = $(this).attr('name');
         var type = $(this).attr('type');
+        if ($(this).is('select')){
+          type = 'select';
+        }
         if (type!== undefined && type!='hidden' && name!==undefined && name.startsWith('data')){
           if ($(this).val()!==undefined && $(this).val()!=='' && $(this).val()!=='0'){
             return true;
@@ -81,7 +85,7 @@ $( document ).ready(function() {
       }
       var elements = checkElements(uuid);
       if (elements.length===0){
-        $('#'+uuid+' > .cntnd_alert').toggleClass('hide');
+        $('#'+uuid+' > .cntnd_alert').removeClass('hide');
         return false;
       }
     }
