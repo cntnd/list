@@ -194,18 +194,18 @@ class CntndList {
       while ($this->db->nextRecord()) {
       	$file = $this->db->f('filename');
       	if (!empty($file)){
-          if (!empty($extra)){
+          if (!empty($extra) && $extra!="0"){
 					  $pictures .= "{src:'".$this->uploadDir.$dirname.$file."'},";
           }
           else {
             $gallery .= $this->doImage($this->uploadDir.$dirname.$file,
-                                $this->uploadDir.$dirname.'thumb/'.$file,
-                                $galleryId);
+                                       $galleryId,
+                                       $this->uploadDir.$dirname.'thumb/'.$file);
           }
 				}
 			}
 
-      if (!empty($extra)){
+      if (!empty($extra) && $extra!="0"){
         $trigger = $galleryId;
         $gallery = $galleryId;
         if ($extra=="link"){
@@ -244,7 +244,7 @@ class CntndList {
     if (!empty($comment)){
       $caption = 'data-caption="'.$comment.'"';
     }
-    if (empty($thumb)){
+    if (empty($thumb) || !file_exists($thumb)){
       $thumb = $image;
     }
     $fancybox='data-fancybox';
