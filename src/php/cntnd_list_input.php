@@ -36,21 +36,22 @@ while ( $db->nextRecord() ) {
 // includes
 cInclude('module', 'includes/class.cntnd_list_input.php');
 cInclude('module', 'includes/script.cntnd_list_input.php');
+cInclude('module', 'includes/style.cntnd_list_input.php');
 
 if (!$template OR empty($template) OR $template=="false"){
   echo '<div class="cntnd_alert cntnd_alert-primary">'.mi18n("CHOOSE_TEMPLATE").'</div>';
 }
 ?>
-<div class="cntnd_alert cntnd_alert-danger cntnd_list-duplicate hide"><?php mi18n("DUPLICATE_CONFIG") ?></div>
+<div class="cntnd_alert cntnd_alert-danger cntnd_list-duplicate hide"><?= mi18n("DUPLICATE_CONFIG") ?></div>
 <div class="form-vertical">
   <div class="form-group">
-    <label for="listname"><?= mi18n("LISTNAME") ?></label>
-    <input id="listname" name="CMS_VAR[1]" type="text" value="<?= $listname ?>" />
+    <label for="listname_<?= $uuid ?>"><?= mi18n("LISTNAME") ?></label>
+    <input id="listname_<?= $uuid ?>" name="CMS_VAR[1]" type="text" class="cntnd_list_id" value="<?= $listname ?>" />
   </div>
 
   <div class="form-group">
-    <label for="template"><?= mi18n("TEMPLATE") ?></label>
-    <select name="CMS_VAR[2]" id="template" size="1" onchange="this.form.submit()">
+    <label for="template_<?= $uuid ?>"><?= mi18n("TEMPLATE") ?></label>
+    <select name="CMS_VAR[2]" id="template_<?= $uuid ?>" size="1" onchange="this.form.submit()">
       <option value="false"><?= mi18n("SELECT_CHOOSE") ?></option>
       <?php
         foreach ($templateOptions as $value) {

@@ -39,16 +39,12 @@ $( document ).ready(function() {
       return true; // return false to cancel form action
   });
 
-/*
-  var duplicate=0;
-  console.log($('#listname'));
-  $('#listname').each(function(){
-    console.log($(this).val());
-    if (duplicate>0){
-      $('cntnd_list-duplicate').removeClass('hide');
+  var duplicate=[];
+  $('.cntnd_list_id').each(function(){
+    if (duplicate.includes($(this).val())){
+      $('.cntnd_list-duplicate').removeClass('hide');
     }
-    duplicate++;
+    duplicate.push($(this).val());
   });
-*/
 });
 </script>
