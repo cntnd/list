@@ -21,7 +21,7 @@ class CntndListOutput {
     }
     $input = $this->dropdownMedia($name.'[value]',$label,$this->documents,'filename',$value['value'],true,true,true,$name.'[target]',$value['target']);
     $input.= '<div class="form-group">';
-    $input.= '<label><i>Pfad (URL, idart):</i></label>';
+    $input.= '<label><i>Pfad (URL, idart) - HIDE:</i></label>';
     $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" />';
     $input.= '</div>';
     return $input;
@@ -44,10 +44,9 @@ class CntndListOutput {
       $list = array();
     }
     $input = $this->dropdownMedia($name.'[value]',$label,$list,'filename',$value['value'],false,true,true,$name.'[target]',$value['target']);
-    // auch target als dropdown!!!
 
     $input.= '<div class="form-group">';
-    $input.= '<label><i>URL (oder idart):</i></label>';
+    $input.= '<label><i>URL (oder idart) - HIDE:</i></label>';
     $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" placeholder="URL mit http"/>';
     $input.= '</div>';
     return $input;
