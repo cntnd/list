@@ -89,12 +89,11 @@ if ($editmode){
   	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="<?= $formId ?>" method="post">
       <div class="cntnd_alert cntnd_alert-danger hide"><?= mi18n("INVALID_FORM") ?></div>
       <?php
-      $cntndListOutput = new CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders());
+      $cntndListOutput = new CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders(),$listname);
       for ($index=0;$index<$count;$index++){
           echo $cntndListOutput->input($data,$values[$index],$index,$listname);
       }
       ?>
-      <!-- onclick="javascript:document.getElementById('LIST_<?= $listname ?>').submit();" -->
   		<button class="btn btn-primary" type="submit"><?= mi18n("ADD") ?></button>
   	</form>
     <hr />

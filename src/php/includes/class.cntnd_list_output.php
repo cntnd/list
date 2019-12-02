@@ -5,24 +5,30 @@
  */
 class CntndListOutput {
 
+  private $listname;
   protected $documents=array();
   protected $images=array();
   protected $imageFolders=array();
 
-  function __construct($documents,$images,$imageFolders) {
+  function __construct($documents,$images,$imageFolders,$listname) {
     $this->documents=$documents;
     $this->images=$images;
     $this->imageFolders=$imageFolders;
+    $this->listname=$listname;
   }
 
   private function downloadlink($label, $name, $value){
+    $disabled='disabled="disabled"';
     if (!$value){
       $value=array('value'=>'','link'=>'');
     }
+    else if ($value['value']=='111111111' || $value['value']=='222222222') {
+      $disabled='';
+    }
     $input = $this->dropdownMedia($name.'[value]',$label,$this->documents,'filename',$value['value'],true,true,true,$name.'[target]',$value['target']);
-    $input.= '<div class="form-group">';
-    $input.= '<label><i>Pfad (URL, idart) - HIDE:</i></label>';
-    $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" />';
+    $input.= '<div class="form-group '.$this->listname.' cntnd_url_path">';
+    $input.= '<label><i>Pfad (URL, idart):</i></label>';
+    $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" '.$disabled.' />';
     $input.= '</div>';
     return $input;
   }
@@ -95,7 +101,7 @@ class CntndListOutput {
 
     $input.= '<div class="form-group '.$w.'">';
     $input.= '<label>'.$label.'</label>';
-    $input.= '<select name="'.$name.'">'."\n";
+    $input.= '<select name="'.$name.'" class="cntnd_dropdown_media" data-listname="'.$this->listname.'">'."\n";
     $input.= '<option value="0">-- kein --</option>'."\n";
     if ($without){
       ($value == 999999999) ? $sel = ' selected="selected"' : $sel = '';
