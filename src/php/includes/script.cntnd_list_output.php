@@ -39,7 +39,6 @@ $( document ).ready(function() {
   }
 
   function checkElements(uuid){
-    console.log(uuid);
     var elements = $('#'+uuid+' *').filter(function(){
         var name = $(this).attr('name');
         var type = $(this).attr('type');

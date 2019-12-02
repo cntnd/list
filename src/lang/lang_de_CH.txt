@@ -1,6 +1,7 @@
 MODULE=Dynamische List
 SELECT_CHOOSE=-bitte wählen-
 CHOOSE_TEMPLATE=Bitte das Template auswählen ansonsten wird die Liste nicht angezeigt.
+DUPLICATE_CONFIG=Es besteht ein zweites Modul mit dem gleichen Namen. Bitte bei einem der Module den Namen anpassen, ansonsten gibt es probleme im Editor.
 NO_TEMPLATE_OUTPUT=Bitte in der Konfiguration das Modul-Template auswählen ansonsten wird die Liste nicht angezeigt.
 LISTNAME=Name der Liste (default: cntnd_list)
 TEMPLATE=Template wählen:

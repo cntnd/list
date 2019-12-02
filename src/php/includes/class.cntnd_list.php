@@ -84,7 +84,6 @@ class CntndList {
           $data = json_decode(base64_decode($this->db->f('serializeddata')), true);
       }
     }
-
     return $data;
   }
 
@@ -251,9 +250,10 @@ class CntndList {
     if (!empty($gallery)){
       $fancybox='data-fancybox="'.$gallery.'"';
     }
-    echo '<a href="'.$image.'" '.$fancybox.' '.$caption.' class="'.$this->listname.' cntnd_gallery">'."\n";
-    echo '<img src="'.$thumb.'" class="'.$this->listname.' cntnd_img" alt="'.$comment.'" />'."\n";
-    echo '</a>'."\n";
+    $input = '<a href="'.$image.'" '.$fancybox.' '.$caption.' class="'.$this->listname.' cntnd_gallery">'."\n";
+    $input.= '<img src="'.$thumb.'" class="'.$this->listname.' cntnd_img" alt="'.$comment.'" />'."\n";
+    $input.= '</a>'."\n";
+    return $input;
   }
 
   private function doImageField($name,$field,$extra){

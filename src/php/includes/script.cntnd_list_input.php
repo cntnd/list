@@ -38,5 +38,15 @@ $( document ).ready(function() {
       });
       return true; // return false to cancel form action
   });
+
+  var duplicate=0;
+  console.log($('#listname'));
+  $('#listname').each(function(){
+    console.log($(this).val());
+    if (duplicate>0){
+      $('cntnd_list-duplicate').removeClass('hide');
+    }
+    duplicate++;
+  });
 });
 </script>

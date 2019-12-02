@@ -41,6 +41,7 @@ if (!$template OR empty($template) OR $template=="false"){
   echo '<div class="cntnd_alert cntnd_alert-primary">'.mi18n("CHOOSE_TEMPLATE").'</div>';
 }
 ?>
+<div class="cntnd_alert cntnd_alert-danger cntnd_list-duplicate hide"><?php mi18n("DUPLICATE_CONFIG") ?></div>
 <div class="form-vertical">
   <div class="form-group">
     <label for="listname"><?= mi18n("LISTNAME") ?></label>
