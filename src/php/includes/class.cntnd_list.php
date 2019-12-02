@@ -16,7 +16,6 @@ class CntndList {
   protected $medien=array();
   protected $images=array();
   protected $folders=array();
-  protected $articles=array();
 
   function __construct($idart, $lang, $client, $listname) {
     $this->idart = $idart;
@@ -56,9 +55,6 @@ class CntndList {
         $prev_dir = $this->db->f('dirname');
       }
     }
-
-    // ArtId.?!
-
   }
 
   public function medien(){
