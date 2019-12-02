@@ -64,12 +64,12 @@ if ($editmode){
         $cntndList->store($serializeddata);
       }
       // UPDATE
-      else if(array_key_exists('action',$_POST) && array_key_exists('key',$_POST)) {
+      else if(array_key_exists('action',$_POST) && array_key_exists('key',$_POST) && $_POST['listname']==$listname) {
         $dataToUpdate=json_decode(base64_decode($_POST['data']), true);
         $values = $cntndList->update($_POST['action'],$_POST['key'],$dataToUpdate,$values);
       }
       // REORDER
-      if(array_key_exists('reorder',$_POST) && !empty($_POST['reorder'])) {
+      if(array_key_exists('reorder',$_POST) && !empty($_POST['reorder']) && $_POST['listname']==$listname) {
         $dataToReorder=json_decode(base64_decode($_POST['reorder']), true);
         $values = $cntndList->reorder($dataToReorder,$values);
       }
@@ -99,6 +99,7 @@ if ($editmode){
     <hr />
     <strong><?= mi18n("LIST_ENTRIES") ?> (<?= count($values) ?>)</strong>
     <form data-uuid="<?= $entryFormId ?>" id="<?= $entryFormId ?>" name="<?= $entryFormId ?>" method="post">
+      <input type="hidden" name="listname" value="<?= $listname ?>" />
       <input type="hidden" name="key" />
       <input type="hidden" name="data" />
       <input type="hidden" name="action" />

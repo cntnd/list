@@ -434,8 +434,8 @@ class CntndList {
             $("#ENTRY_"+uuid+" input[name=reorder]").val(window.btoa(JSON.stringify(order)));
             $("#ENTRY_"+uuid+" button[type=submit]").removeClass("hide");
           };'."\n";
-    echo "var elements = document.getElementById('cntnd_list_items-$this->listname');\n";
-    echo "var sortable = Sortable.create(elements, { draggable: 'cntnd_list_items-$this->listname .listitem', onEnd: function(){ onReordering('$this->listname') }});\n";
+    echo "var elements_$this->listname = document.getElementById('cntnd_list_items-$this->listname');\n";
+    echo "Sortable.create(elements_$this->listname, { draggable: '.listitem', onEnd: function(){ onReordering('$this->listname') }});\n";
     echo '</script>'."\n";
   }
 }
