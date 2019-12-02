@@ -98,6 +98,7 @@ if ($editmode){
   		<button class="btn btn-primary" type="submit"><?= mi18n("ADD") ?></button>
   	</form>
     <hr />
+    <strong><?= mi18n("LIST_ENTRIES") ?> (<?= count($values) ?>)</strong>
     <form data-uuid="<?= $entryFormId ?>" id="<?= $entryFormId ?>" name="<?= $entryFormId ?>" method="post">
       <input type="hidden" name="key" />
       <input type="hidden" name="data" />
@@ -118,7 +119,7 @@ if ($editmode){
           $index++;
         }
         echo '<button class="cntnd_list_action btn btn-primary" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="update">'.mi18n("SAVE").'</button>'."\n";
-        echo '<button class="cntnd_list_action btn btn-light" type="reset">'.mi18n("RESET") .'</button>'."\n";
+        //echo '<button class="cntnd_list_action btn btn-light" type="reset">'.mi18n("RESET") .'</button>'."\n";
         echo '<button class="cntnd_list_action btn" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="delete">'.mi18n("DELETE") .'</button>'."\n";
         echo '</div>'."\n";
       }

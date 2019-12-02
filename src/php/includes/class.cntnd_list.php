@@ -294,7 +294,7 @@ class CntndList {
         $link = $this->uploadDir.$filename;
       }
       $this->tpl->set('d', $name, $link);
-      if (!empty($field['target']) && $field['target']!="auto"){
+      if (!empty($field['target']) && $field['target']!="0"){
         $this->tpl->set('d', '_'.$name.'_target', $field['target']);
       }
     }
@@ -345,7 +345,7 @@ class CntndList {
   private function doLinkField($name, $field){
     if (!empty($field['value'])){
       $this->tpl->set('d', $name, '<span class="'.$this->listname.' cntnd_linktext">'.stripslashes($field['value']).'</span>');
-      if (!empty($field['target']) && $field['target']!="auto"){
+      if (!empty($field['target']) && $field['target']!="0"){
         $this->tpl->set('d', '_'.$name.'_target', $field['target']);
       }
     }

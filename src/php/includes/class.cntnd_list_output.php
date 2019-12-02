@@ -127,8 +127,8 @@ class CntndListOutput {
     $input = '<div class="form-group w-25">'."\n";
     $input.= '<label><i>Target:</i></label>'."\n";
     $input.= '<select name="'.$name.'">'."\n";
-    ($value == 'auto' || empty($value)) ? $sel = ' selected="selected"' : $sel = '';
-    $input.= '<option value="auto">-- automatisch --</option>'."\n";
+    ($value == '0' || empty($value)) ? $sel = ' selected="selected"' : $sel = '';
+    $input.= '<option value="0">-- automatisch --</option>'."\n";
     ($value == '_blank') ? $sel = ' selected="selected"' : $sel = '';
     $input.= '<option value="_blank" '.$sel.'> _blank (neues Fenster)</option>'."\n";
     ($value == '_self') ? $sel = ' selected="selected"' : $sel = '';

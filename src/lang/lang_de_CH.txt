@@ -12,3 +12,4 @@ DELETE=Löschen
 RESET=Zurücksetzen
 SWAP=Verschieben
 INVALID_FORM=Bitte mindestens einen Wert eingeben
+LIST_ENTRIES=Liste der Einträge
