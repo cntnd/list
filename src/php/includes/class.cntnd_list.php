@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * cntnd_list Class
  */
@@ -8,6 +6,7 @@ class CntndList {
 
   private $idart;
   private $lang;
+  private $client;
   private $listname;
   private $db;
   private $tpl;
