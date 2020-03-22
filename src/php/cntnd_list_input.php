@@ -51,7 +51,7 @@ if (!$template OR empty($template) OR $template=="false"){
 
   <div class="form-group">
     <label for="template_<?= $uuid ?>"><?= mi18n("TEMPLATE") ?></label>
-    <select name="CMS_VAR[2]" id="template_<?= $uuid ?>" size="1" onchange="this.form.submit()">
+    <select name="CMS_VAR[2]" id="template_<?= $uuid ?>" size="1">
       <option value="false"><?= mi18n("SELECT_CHOOSE") ?></option>
       <?php
         foreach ($templateOptions as $value) {
