@@ -86,7 +86,7 @@ if ($editmode){
     $formId = "LIST_".$listname;
     $entryFormId = "ENTRY_".$listname;
   	?>
-  	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="<?= $formId ?>" method="post">
+  	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="cntnd_list" method="post">
       <div class="cntnd_alert cntnd_alert-danger hide"><?= mi18n("INVALID_FORM") ?></div>
       <?php
       $cntndListOutput = new CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders(),$listname);

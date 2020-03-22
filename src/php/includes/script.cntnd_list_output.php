@@ -70,9 +70,9 @@ $( document ).ready(function() {
     $('#'+uuid).submit();
   });
 
-  $('form').submit(function() {
-    $('#'+uuid+' > .cntnd_alert').addClass('hide');
+  $('form[name="cntnd_list"]').submit(function() {
     var uuid = $(this).data('uuid');
+    $('#'+uuid+' > .cntnd_alert').addClass('hide');
     if (uuid.startsWith("ENTRY_") &&
             ($(this).children('input[name=action]').val()==='delete' ||
              $(this).children('input[name=action]').val()==='reorder')){
