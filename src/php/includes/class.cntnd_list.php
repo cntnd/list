@@ -80,7 +80,7 @@ class CntndList {
     $this->db->query($sql, $values);
     while ($this->db->nextRecord()) {
       if (is_string($this->db->f('serializeddata'))){
-          $data = json_decode(base64_decode($this->db->f('serializeddata')), true);
+        $data = $this->unescapeDate($this->db->f('serializeddata'));
       }
     }
     return $data;
@@ -91,7 +91,7 @@ class CntndList {
         'listname' => $this->listname,
         'idart' => cSecurity::toInteger($this->idart),
         'idlang' => cSecurity::toInteger($this->lang),
-        'data' => $this->db->escape(base64_encode($data))
+        'data' => $this->escapeDate($data)
     );
     $this->db->query("SELECT idlist FROM cntnd_dynlist WHERE listname=':listname' AND idart=:idart AND idlang=:idlang", $values);
     if (!$this->db->nextRecord()){
@@ -101,6 +101,20 @@ class CntndList {
         $sql = "UPDATE cntnd_dynlist SET serializeddata=':data' WHERE listname=':listname' AND idart=:idart AND idlang=:idlang";
     }
     $this->db->query($sql, $values);
+  }
+  
+
+  private function escapeDate($string){
+    $specialchars = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+    $base64 = base64_encode($specialchars);
+    return $base64;
+  }
+
+  private function unescapeDate($string){
+    $base64 = base64_decode($string);
+    $specialchars = htmlspecialchars_decode($base64, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+    $decode = json_decode($specialchars, true);
+    return $decode;
   }
 
   public function update($action, $index, $data, $values){
