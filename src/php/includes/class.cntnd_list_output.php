@@ -1,5 +1,7 @@
 <?php
 
+include_once("class.cntnd_list_util.php");
+
 /**
  * cntnd_list Output Class
  */
@@ -15,6 +17,10 @@ class CntndListOutput {
     $this->images=$images;
     $this->imageFolders=$imageFolders;
     $this->listname=$listname;
+  }
+
+  public static function unescapeData($string){
+    return CntndListUtil::unescapeData($string);
   }
 
   private function downloadlink($label, $name, $value){

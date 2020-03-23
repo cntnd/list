@@ -1,4 +1,7 @@
 <?php
+
+include_once("class.cntnd_list_util.php");
+
 /**
  * cntnd_list Class
  */
@@ -102,19 +105,13 @@ class CntndList {
     }
     $this->db->query($sql, $values);
   }
-  
 
   private function escapeDate($string){
-    $specialchars = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-    $base64 = base64_encode($specialchars);
-    return $base64;
+    return CntndListUtil::escapeData($string);
   }
 
   private function unescapeDate($string){
-    $base64 = base64_decode($string);
-    $specialchars = htmlspecialchars_decode($base64, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-    $decode = json_decode($specialchars, true);
-    return $decode;
+    return CntndListUtil::unescapeData($string);
   }
 
   public function update($action, $index, $data, $values){

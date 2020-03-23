@@ -1,13 +1,18 @@
 ?><?php
 // cntnd_list_input
 
+// includes
+cInclude('module', 'includes/class.cntnd_list_input.php');
+cInclude('module', 'includes/script.cntnd_list_input.php');
+cInclude('module', 'includes/style.cntnd_list_input.php');
+
 // input/vars
 $listname = "CMS_VALUE[1]";
 if (empty($listname)){
     $listname="cntnd_list";
 }
 $template = "CMS_VALUE[2]";
-$data = json_decode(base64_decode("CMS_VALUE[3]"), true);
+$data = CntndListInput::unescapeData("CMS_VALUE[3]");
 
 // other/vars
 $uuid = rand();
@@ -32,11 +37,6 @@ $db->query($sql);
 while ( $db->nextRecord() ) {
     $dirs[] = $db->f("dirname");
 }
-
-// includes
-cInclude('module', 'includes/class.cntnd_list_input.php');
-cInclude('module', 'includes/script.cntnd_list_input.php');
-cInclude('module', 'includes/style.cntnd_list_input.php');
 
 if (!$template OR empty($template) OR $template=="false"){
   echo '<div class="cntnd_alert cntnd_alert-primary">'.mi18n("CHOOSE_TEMPLATE").'</div>';

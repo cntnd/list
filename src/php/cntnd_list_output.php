@@ -25,6 +25,14 @@ defined('CON_FRAMEWORK') || die('Illegal call: Missing framework initialization 
 // editmode
 $editmode = cRegistry::isBackendEditMode();
 
+// includes
+cInclude('module', 'includes/class.cntnd_list.php');
+cInclude('module', 'includes/class.cntnd_list_output.php');
+cInclude('module', 'includes/class.template.php');
+if ($editmode){
+  cInclude('module', 'includes/script.cntnd_list_output.php');
+}
+
 // input/vars
 $listname = "CMS_VALUE[1]";
 if (empty($listname)){
@@ -39,15 +47,7 @@ if (!empty($template) AND $template!="false"){
   preg_match_all('@\{\w*?\}@is', $templateContent, $templateFields);
   $count = count(array_unique($templateFields[0]));
 }
-$data = json_decode(base64_decode("CMS_VALUE[3]"), true);
-
-// includes
-cInclude('module', 'includes/class.cntnd_list.php');
-cInclude('module', 'includes/class.cntnd_list_output.php');
-cInclude('module', 'includes/class.template.php');
-if ($editmode){
-  cInclude('module', 'includes/script.cntnd_list_output.php');
-}
+$data = CntndListOutput::unescapeData("CMS_VALUE[3]");
 
 // values
 $cntndList = new CntndList($idart, $lang, $client, $listname);
