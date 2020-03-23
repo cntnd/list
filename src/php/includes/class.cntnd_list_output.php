@@ -202,7 +202,7 @@ class CntndListOutput {
       case 'textarea':
           $input.= '<div class="form-group">';
           $input.= '<label>'.$label.'</label>';
-          $input.= '<textarea name="'.$valueName.'">'.$valueValue.'</textarea>';
+          $input.= '<textarea name="'.$valueName.'" rows="5">'.$valueValue.'</textarea>';
           $input.= '</div>';
           break;
       case 'downloadlink':
