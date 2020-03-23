@@ -205,7 +205,7 @@ class CntndListOutput {
             $input_extra = ' <a href="https://devhints.io/markdown" target="_blank">(?)</a>';
           }
           $input.= '<div class="form-group">';
-          $input.= '<label>'.$label.$input_extra'</label>';
+          $input.= '<label>'.$label.$input_extra.'</label>';
           $input.= '<textarea name="'.$valueName.'" rows="5">'.$valueValue.'</textarea>';
           $input.= '</div>';
           break;
