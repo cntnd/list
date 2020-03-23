@@ -200,8 +200,12 @@ class CntndListOutput {
           $input.= '<input type="'.self::inputType($type).'" name="'.$valueName.'" value="'.$valueValue.'" />';
           break;
       case 'textarea':
+          $input_extra='';
+          if ($extra=="markdown"){
+            $input_extra = ' <a href="https://devhints.io/markdown" target="_blank">(?)</a>';
+          }
           $input.= '<div class="form-group">';
-          $input.= '<label>'.$label.'</label>';
+          $input.= '<label>'.$label.$input_extra'</label>';
           $input.= '<textarea name="'.$valueName.'" rows="5">'.$valueValue.'</textarea>';
           $input.= '</div>';
           break;
