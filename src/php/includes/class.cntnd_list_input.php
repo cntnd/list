@@ -48,76 +48,41 @@ class CntndListInput {
         $extras[0]['text'] ='mit Piktogramm';
         $extras[1]['value']=false;
         $extras[1]['text'] ='ohne Piktogramm';
-
-        $ret= '<option value="0">  --bitte wählen-- </option> ';
-        foreach ($extras as $extra){
-          if ( $value == $extra['value']) {
-            $ret.= '<option selected="selected" value="'.$extra['value'].'">'.$extra['text'].'</option>';
-          } else {
-            $ret.= '<option value="'.$extra['value'].'">'.$extra['text'].'</option>';
-          }
-        }
         break;
       case 'textarea':
-        $extras[0]['value']=true;
+        $extras[0]['value']='extended';
         $extras[0]['text'] ='Extended-Text';
-
-        $ret= '<option value="0">  --bitte wählen-- </option> ';
-        foreach ($extras as $extra){
-          if ( $value == $extra['value']) {
-            $ret.= '<option selected="selected" value="'.$extra['value'].'">'.$extra['text'].'</option>';
-          } else {
-            $ret.= '<option value="'.$extra['value'].'">'.$extra['text'].'</option>';
-          }
-        }
+        $extras[1]['value']='markdown';
+        $extras[1]['text'] ='Markdown';
         break;
       case 'url':
           $extras[0]['value']='documents';
           $extras[0]['text'] ='Dokumente';
           $extras[1]['value']='images';
           $extras[1]['text'] ='Bilder';
-
-          $ret= '<option value="0">  --bitte wählen-- </option> ';
-          foreach ($extras as $extra){
-            if ( $value == $extra['value']) {
-              $ret.= '<option selected="selected" value="'.$extra['value'].'">'.$extra['text'].'</option>';
-            } else {
-              $ret.= '<option value="'.$extra['value'].'">'.$extra['text'].'</option>';
-            }
-          }
           break;
       case 'image':
           $extras[0]['value']='comment';
           $extras[0]['text'] ='mit Kommentaren';
           $extras[1]['value']='gallery';
           $extras[1]['text'] ='Bilderstreifen mit Kommentaren';
-
-          $ret= '<option value="0">  --bitte wählen-- </option> ';
-          foreach ($extras as $extra){
-            if ( $value == $extra['value']) {
-              $ret.= '<option selected="selected" value="'.$extra['value'].'">'.$extra['text'].'</option>';
-            } else {
-              $ret.= '<option value="'.$extra['value'].'">'.$extra['text'].'</option>';
-            }
-          }
           break;
-        case 'gallery':
-            $extras[0]['value']='link';
-            $extras[0]['text'] ='nur Link anzeigen';
-            $extras[1]['value']='thumbnail';
-            $extras[1]['text'] ='nur Vorschaubild anzeigen';
-            $extras[2]['value']='galleryonly';
-            $extras[2]['text'] ='nur Fotogalerie';
-
-            $ret= '<option value="0">  --bitte wählen-- </option> ';
-            foreach ($extras as $extra){
-              if ( $value == $extra['value']) {
-                $ret.= '<option selected="selected" value="'.$extra['value'].'">'.$extra['text'].'</option>';
-              } else {
-                $ret.= '<option value="'.$extra['value'].'">'.$extra['text'].'</option>';
-              }
-            }
-            break;
+      case 'gallery':
+          $extras[0]['value']='link';
+          $extras[0]['text'] ='nur Link anzeigen';
+          $extras[1]['value']='thumbnail';
+          $extras[1]['text'] ='nur Vorschaubild anzeigen';
+          $extras[2]['value']='galleryonly';
+          $extras[2]['text'] ='nur Fotogalerie';
+          break;
+    }
+    $ret= '<option value="0">  --bitte wählen-- </option> ';
+    foreach ($extras as $extra){
+      if ( $value == $extra['value']) {
+        $ret.= '<option selected="selected" value="'.$extra['value'].'">'.$extra['text'].'</option>';
+      } else {
+        $ret.= '<option value="'.$extra['value'].'">'.$extra['text'].'</option>';
+      }
     }
     return $ret;
   }

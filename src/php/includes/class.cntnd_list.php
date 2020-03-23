@@ -1,6 +1,7 @@
 <?php
 
 include_once("class.cntnd_list_util.php");
+include_once("Parsedown.php");
 
 /**
  * cntnd_list Class
@@ -316,7 +317,7 @@ class CntndList {
   private function doField($name,$field,$extra=false){
     if (!empty($field['value'])){
       // Extended > - lorem = List, etc.
-      if ($extra){
+      if ($extra=='extended'){
         $arr = explode("\n", $field['value']);
         $text = '<ul>';
         foreach($arr as $value){
@@ -324,10 +325,16 @@ class CntndList {
         }
         $text .= '</ul>';
       }
+      // Markdown parsed with Parsedown
+      else if ($extra=='markdown'){
+        $parsedown = new Parsedown();
+        $parsedown->setSafeMode(true);
+        $text = $parsedown->line($field['value']);
+      }
       else {
         $text = $field['value'];
       }
-        $this->tpl->set('d', $name, '<div class="'.$this->listname.' cntnd_text">'.stripslashes($text).'</div>');
+      $this->tpl->set('d', $name, '<div class="'.$this->listname.' cntnd_text">'.stripslashes($text).'</div>');
     }
     else {
         $this->tpl->set('d', $name, "");
