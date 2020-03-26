@@ -1,6 +1,6 @@
 {
   "name": "cntnd_list",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Dynamische Liste",
   "devDependencies": {
     "del": "^5.1.0",
