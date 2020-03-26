@@ -16,6 +16,10 @@ class CntndListUtil {
     $decode = json_decode($specialchars, true);
     return $decode;
   }
+
+  public static function startsWith($haystack, $needle){
+    return strncmp($haystack, $needle, strlen($needle)) === 0;
+  }
 }
 
 ?>

@@ -384,6 +384,10 @@ class CntndList {
           $link = $field['link'];
           $icon = "link";
           $target="_blank";
+          if (CntndListUtil::startsWith($link,"#")){
+            $icon="linkintern";
+            $target="_self";
+          }
       }
       if ($field['value']==222222222){
           $link = "front_content.php?idart=".$field['link'];
