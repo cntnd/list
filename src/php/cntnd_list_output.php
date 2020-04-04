@@ -65,7 +65,7 @@ if ($editmode){
       }
       // UPDATE
       else if(array_key_exists('action',$_POST) && array_key_exists('key',$_POST) && $_POST['listname']==$listname) {
-        $dataToUpdate=json_decode(base64_decode($_POST['data']), true);
+        $dataToUpdate = CntndListOutput::unescapeData($_POST['data']);
         $values = $cntndList->update($_POST['action'],$_POST['key'],$dataToUpdate,$values);
       }
       // REORDER

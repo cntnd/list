@@ -258,11 +258,13 @@ class CntndList {
       $thumb = $image;
     }
     $fancybox='data-fancybox';
+    $css='';
     if (!empty($gallery)){
       $fancybox='data-fancybox="'.$gallery.'"';
+      $css = 'cntnd_gallery';
     }
-    $input = '<a href="'.$image.'" '.$fancybox.' '.$caption.' class="'.$this->listname.' cntnd_gallery">'."\n";
-    $input.= '<img src="'.$thumb.'" class="'.$this->listname.' cntnd_img" alt="'.$comment.'" />'."\n";
+    $input = '<a href="'.$image.'" '.$fancybox.' '.$caption.' class="'.$this->listname.' cntnd_link '.$css.'">'."\n";
+    $input.= '<img src="'.$thumb.'" class="'.$this->listname.' cntnd_img '.$css.'" alt="'.$comment.'" />'."\n";
     $input.= '</a>'."\n";
     return $input;
   }

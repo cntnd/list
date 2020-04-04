@@ -10,10 +10,12 @@ class CntndListUtil {
     return $base64;
   }
 
-  public static function unescapeData($string){
+  public static function unescapeData($string,$decode_specialchars=true){
     $base64 = utf8_encode(base64_decode($string));
-    $specialchars = htmlspecialchars_decode($base64, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-    $decode = json_decode($specialchars, true);
+    if ($decode_specialchars){
+      $base64 = htmlspecialchars_decode($base64, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+    }
+    $decode = json_decode($base64, true);
     return $decode;
   }
 
