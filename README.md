@@ -11,7 +11,7 @@ To get started you have to run the [SQL statement located in `src/sql`](src/sql/
 * `Text (plain)`: Plain text without any HTML tags
 * `Title for Link`: Title for a `<a>` link tag, with or without icon
 * `Link or Download`: Dropdown where you can select medias, files or create an external or internal Link
-* `URL`: Similar to `Link or Download` except you can enter only a valid URL
+* `URL`: Similar to `Link or Download` except it generates only a valid URL, no HTML
 * `Image`: Displays several Images choosen from a dropdown, with or without comments (for fancybox)
 * `Gallery (from folder)`: Displays a gallery choosen from a folder (several options how to display the gallery, with fancybox)
 
