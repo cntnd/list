@@ -1,11 +1,3 @@
 # cntnd_list
 
-* includes in "php" files: `cInclude('module', 'includes/class.module.mparticleinclude.php');`
-* includes in "includes" php files: `include_once($moduleHandler->getModulePath() . 'vendor/xyz.php');`
-
-*contenido php functions*
-
-* `$client = cRegistry::getClientId();`
-* `$lang = cRegistry::getLanguageId();`  
-* `mi18n("SELECT_ARTICLE")`
-* `buildArticleSelect("CMS_VAR[2]", $oModule->cmsCatID, $oModule->cmsArtID);`
+To get started you have to run the [SQL statement located in `src/sql`](src/sql/cntnd_list.sql) within your contenido distribution.
