@@ -56,32 +56,54 @@ class CntndListInput {
         $extras[1]['text'] ='Markdown';
         break;
       case 'url':
-          $extras[0]['value']='documents';
-          $extras[0]['text'] ='Dokumente';
-          $extras[1]['value']='images';
-          $extras[1]['text'] ='Bilder';
-          break;
+        $extras[0]['value']='documents';
+        $extras[0]['text'] ='Dokumente';
+        $extras[1]['value']='images';
+        $extras[1]['text'] ='Bilder';
+        break;
       case 'image':
-          $extras[0]['value']='comment';
-          $extras[0]['text'] ='mit Kommentaren';
-          $extras[1]['value']='gallery';
-          $extras[1]['text'] ='Bilderstreifen mit Kommentaren';
-          break;
+        $extras[0]['value']='comment';
+        $extras[0]['text'] ='mit Kommentaren';
+        $extras[1]['value']='gallery';
+        $extras[1]['text'] ='Bilderstreifen mit Kommentaren';
+        break;
       case 'gallery':
-          $extras[0]['value']='link';
-          $extras[0]['text'] ='nur Link anzeigen';
-          $extras[1]['value']='thumbnail';
-          $extras[1]['text'] ='nur Vorschaubild anzeigen';
-          $extras[2]['value']='galleryonly';
-          $extras[2]['text'] ='nur Fotogalerie';
-          break;
+        $extras[0]['value']='link';
+        $extras[0]['text'] ='nur Link anzeigen';
+        $extras[1]['value']='thumbnail';
+        $extras[1]['text'] ='nur Vorschaubild anzeigen';
+        $extras[2]['value']='galleryonly';
+        $extras[2]['text'] ='nur Fotogalerie';
+        break;
     }
     $ret= '<option value="0">  --bitte wählen-- </option> ';
     foreach ($extras as $extra){
-      if ( $value == $extra['value']) {
+      if ($value == $extra['value']) {
         $ret.= '<option selected="selected" value="'.$extra['value'].'">'.$extra['text'].'</option>';
       } else {
         $ret.= '<option value="'.$extra['value'].'">'.$extra['text'].'</option>';
+      }
+    }
+    return $ret;
+  }
+
+  public static function hasOptionalField($type){
+    return ($type=="gallery");
+  }
+
+  public static function getOptionalFields($type,$value){
+    switch($type){
+      case 'gallery':
+        $optionals[0]['value']='comment';
+        $optionals[0]['text'] ='mit Kommentaren ("kommentare.txt" in Ordner)';
+        break;
+    }
+    $ret= '<option value="0">  --bitte wählen-- </option> ';
+    foreach ($optionals as $option){
+      if ($value == $option['value']) {
+        $ret.= '<option selected="selected" value="'.$option['value'].'">'.$option['text'].'</option>';
+      } else {
+        $ret.= '<option value="'.$option['value'].'">'.$option['text'].'</option>';
       }
     }
     return $ret;

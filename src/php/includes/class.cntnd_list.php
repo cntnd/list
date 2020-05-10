@@ -151,7 +151,8 @@ class CntndList {
         $index=0;
         foreach ($value as $name => $field) {
           $extra = 'data['.$index.'][extra]';
-          $this->renderField(self::tplName($name), $field, $data[$extra]);
+          $optional ='data['.$index.'][optional]';
+          $this->renderField(self::tplName($name), $field, $data[$extra], $data[$optional]);
           $index++;
         }
         $this->tpl->next();
@@ -160,7 +161,7 @@ class CntndList {
     $this->tpl->generate($template);
   }
 
-  private function renderField($name, $field, $extra){
+  private function renderField($name, $field, $extra, $optional){
     switch($field['type']){
       case 'downloadlink':
           $this->doDownloadLinkField($name, $field, $extra);
@@ -172,7 +173,7 @@ class CntndList {
           $this->doImageField($name, $field, $extra);
           break;
       case 'gallery':
-          $this->doGalleryField($name, $field, $extra);
+          $this->doGalleryField($name, $field, $extra, $optional);
           break;
       case 'linktext':
           $this->doLinkField($name, $field);
@@ -194,25 +195,49 @@ class CntndList {
     return str_replace(array("{","}"),"",$name);
   }
 
-  private function doGalleryField($name,$field,$extra){
+  private function doGalleryField($name,$field,$extra,$optional){
     if (!empty($field['value'])){
       $gallery = "";
       $galleryId = 'gallery'.rand(100,999);
       $cfg = cRegistry::getConfig();
       $dirname = $this->folders[$field['value']]['dirname'];
+
+      // Optionals: Kommentare
+      if (!empty($optional) && $optional=="0"){
+        $comments=[];
+        $commentFile = $this->uploadDir.$dirname.'kommentare.txt';
+        if (file_exists($commentFile)){
+          $comments = file($commentFile, FILE_IGNORE_NEW_LINES);
+        }
+      }
+
+      // Bilder
       $this->db->query("SELECT filename FROM ".$cfg["tab"]["upl"]." WHERE dirname = '".$dirname."' AND filetype != '' ORDER BY filename ");
+      $i=0;
       while ($this->db->nextRecord()) {
       	$file = $this->db->f('filename');
       	if (!empty($file)){
           if (!empty($extra) && $extra!="0"){
-					  $pictures .= "{src:'".$this->uploadDir.$dirname.$file."'},";
+            $opt = "";
+            if (!empty($optional) && $optional=="0" && !empty($comments[$i])){
+              $opt = "opts : {
+                  			caption : '".$comments[$i]."'
+                  		}";
+            }
+					  $pictures .= "{src:'".$this->uploadDir.$dirname.$file."' ".$opt."},";
           }
           else {
+            $comment = '';
+            if (!empty($optional) && $optional=="0" && !empty($comments[$i])){
+              $comment = $comments[$i];
+            }
             $gallery .= $this->doImage($this->uploadDir.$dirname.$file,
                                        $galleryId,
-                                       $this->uploadDir.$dirname.'thumb/'.$file);
+                                       $this->uploadDir.$dirname.'thumb/'.$file,
+                                       $comment);
           }
 				}
+        $i++;
 			}
 
       if (!empty($extra) && $extra!="0"){
@@ -232,7 +257,7 @@ class CntndList {
                 			<!--
                 			$(document).ready(function() {
                 				$("#'.$trigger.'").click(function() {
-                					$.fancybox.open(['.substr($pictures, 0, -1).']);
+                					$.fancybox.open(['.substr(y, 0, -1).']);
                 				});
                 			});
                 			-->

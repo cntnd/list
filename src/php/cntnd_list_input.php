@@ -78,6 +78,7 @@ if (!empty($template) AND $template!="false"){
       $label = 'data['.$index.'][label]';
       $type ='data['.$index.'][type]';
       $extra ='data['.$index.'][extra]';
+      $optional ='data['.$index.'][optional]';
 
       echo '<tr>';
       echo '<td><b>'.$field.'</b><input data-uuid="'.$uuid.'" type="hidden" name="'.$tpl_field.'" value="'.$field.'" /></td>';
@@ -85,7 +86,16 @@ if (!empty($template) AND $template!="false"){
       echo '<td><select data-uuid="'.$uuid.'" name="'.$type.'">'.CntndListInput::getChooseFields($field,$data[$type]).'</select></td>';
       echo '<td>';
       if (CntndListInput::isExtraField($data[$type])){
-        echo '<select data-uuid="'.$uuid.'" name="'.$extra.'">'.CntndListInput::getExtraFields($data[$type],$data[$extra],$dirs).'</select>';
+        echo '<div class="form-group">';
+        echo '<label for="extras">Extras:</label>';
+        echo '<select data-uuid="'.$uuid.'" name="'.$extra.'" id="extras">'.CntndListInput::getExtraFields($data[$type],$data[$extra],$dirs).'</select>';
+        echo '</div>';
+      }
+      if (CntndListInput::hasOptionalField($data[$type])){
+        echo '<div class="form-group">';
+        echo '<label for="optional">Zusatz:</label>';
+        echo '<select data-uuid="'.$uuid.'" name="'.$optional.'" id="optional">'.CntndListInput::getOptionalFields($data[$type],$data[$optional]).'</select>';
+        echo '</div>';
       }
       echo '</td>';
       echo '</tr>';
