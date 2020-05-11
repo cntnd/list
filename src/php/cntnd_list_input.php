@@ -84,7 +84,7 @@ if (!empty($template) AND $template!="false"){
       echo '<td><b>'.$field.'</b><input data-uuid="'.$uuid.'" type="hidden" name="'.$tpl_field.'" value="'.$field.'" /></td>';
       echo '<td><input data-uuid="'.$uuid.'" type="text" name="'.$label.'" value="'.$data[$label].'" /></td>';
       echo '<td><select data-uuid="'.$uuid.'" name="'.$type.'">'.CntndListInput::getChooseFields($field,$data[$type]).'</select></td>';
-      echo '<td>';
+      echo '<td class="form-horizontal">';
       if (CntndListInput::isExtraField($data[$type])){
         echo '<div class="form-group">';
         echo '<label for="extras">Extras:</label>';

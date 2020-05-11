@@ -15,10 +15,13 @@ class CntndList {
   private $db;
   private $tpl;
   private $uploadDir;
+  private $uploadPath;
 
   protected $medien=array();
   protected $images=array();
   protected $folders=array();
+  private $mediatypes=array('pdf','docx','doc','xlsx','xls');
+  private $imagetypes=array('jpeg','jpg','gif','png');
 
   function __construct($idart, $lang, $client, $listname) {
     $this->idart = $idart;
@@ -30,11 +33,10 @@ class CntndList {
 
     $cfgClient = cRegistry::getClientConfig();
     $this->uploadDir = $cfgClient[$client]["upl"]["htmlpath"];
+    $this->uploadPath = $cfgClient[$client]["upl"]["path"];
 
     // medien, images, folders
     $cfg = cRegistry::getConfig();
-    $mediatypes=array('pdf','docx','doc','xlsx','xls');
-    $imagetypes=array('jpeg','jpg','gif','png');
 
     $sql = "SELECT * FROM :table WHERE idclient=:idclient ORDER BY dirname ASC, filename ASC";
     $values = array(
@@ -44,12 +46,12 @@ class CntndList {
     $this->db->query($sql, $values);
     while ($this->db->nextRecord()) {
       // Medien
-      if (in_array($this->db->f('filetype'),$mediatypes)){
+      if (in_array($this->db->f('filetype'),$this->mediatypes)){
         $this->medien[$this->db->f('idupl')] = array ('idupl' => $this->db->f('idupl'), 'filename' => $this->db->f('dirname').$this->db->f('filename'), 'dirname' => $this->db->f('dirname'));
       }
 
       // Bilder
-      if (in_array($this->db->f('filetype'),$imagetypes)){
+      if (in_array($this->db->f('filetype'),$this->imagetypes)){
         $this->images[$this->db->f('idupl')] = array ('idupl' => $this->db->f('idupl'), 'filename' => $this->db->f('dirname').$this->db->f('filename'), 'dirname' => $this->db->f('dirname'));
         // Ordner
         if ($prev_dir!=$this->db->f('dirname')){
@@ -151,7 +153,7 @@ class CntndList {
         $index=0;
         foreach ($value as $name => $field) {
           $extra = 'data['.$index.'][extra]';
-          $optional ='data['.$index.'][optional]';
+          $optional = 'data['.$index.'][optional]';
           $this->renderField(self::tplName($name), $field, $data[$extra], $data[$optional]);
           $index++;
         }
@@ -164,7 +166,7 @@ class CntndList {
   private function renderField($name, $field, $extra, $optional){
     switch($field['type']){
       case 'downloadlink':
-          $this->doDownloadLinkField($name, $field, $extra);
+          $this->doDownloadLinkField($name, $field, $extra, $optional);
           break;
       case 'url':
           $this->doUrlField($name, $field, $extra);
@@ -203,42 +205,43 @@ class CntndList {
       $dirname = $this->folders[$field['value']]['dirname'];
 
       // Optionals: Kommentare
-      if (!empty($optional) && $optional=="0"){
+      if (!empty($optional) && $optional=="comment"){
         $comments=[];
-        $commentFile = $this->uploadDir.$dirname.'kommentare.txt';
+        $commentFile = $this->uploadPath.$dirname.$field['comment'];
         if (file_exists($commentFile)){
           $comments = file($commentFile, FILE_IGNORE_NEW_LINES);
         }
       }
 
       // Bilder
-      $this->db->query("SELECT filename FROM ".$cfg["tab"]["upl"]." WHERE dirname = '".$dirname."' AND filetype != '' ORDER BY filename ");
+      $this->db->query("SELECT filename, filetype FROM ".$cfg["tab"]["upl"]." WHERE dirname = '".$dirname."' AND filetype != '' ORDER BY filename ");
       $i=0;
+      $pictures='';
       while ($this->db->nextRecord()) {
-      	$file = $this->db->f('filename');
-      	if (!empty($file)){
-          if (!empty($extra) && $extra!="0"){
-            $opt = "";
-            if (!empty($optional) && $optional=="0" && !empty($comments[$i])){
-              $opt = "opts : {
-                  			caption : '".$comments[$i]."'
-                  		}";
+        if (in_array($this->db->f('filetype'),$this->imagetypes)){
+          $file = $this->db->f('filename');
+          if (!empty($file)){
+            if (!empty($extra) && $extra!="0"){
+              $opt = "";
+              if (!empty($optional) && $optional=="comment" && !empty($comments[$i])){
+                $opt = ", opts: { caption: '".$comments[$i]."' }";
+              }
+              $pictures .= "{src:'".$this->uploadDir.$dirname.$file."' ".$opt."},";
             }
-					  $pictures .= "{src:'".$this->uploadDir.$dirname.$file."' ".$opt."},";
-          }
-          else {
-            $comment = '';
-            if (!empty($optional) && $optional=="0" && !empty($comments[$i])){
-              $comment = $comments[$i];
+            else {
+              $comment = '';
+              if (!empty($optional) && $optional=="comment" && !empty($comments[$i])){
+                $comment = $comments[$i];
+              }
+              $gallery .= $this->doImage($this->uploadDir.$dirname.$file,
+                  $galleryId,
+                  $this->uploadDir.$dirname.'thumb/'.$file,
+                  $comment);
             }
-            $gallery .= $this->doImage($this->uploadDir.$dirname.$file,
-                                       $galleryId,
-                                       $this->uploadDir.$dirname.'thumb/'.$file,
-                                       $comment);
           }
-				}
-        $i++;
-			}
+          $i++;
+        }
+      }
 
       if (!empty($extra) && $extra!="0"){
         $trigger = $galleryId;
@@ -257,7 +260,7 @@ class CntndList {
                 			<!--
                 			$(document).ready(function() {
                 				$("#'.$trigger.'").click(function() {
-                					$.fancybox.open(['.substr(y, 0, -1).']);
+                					$.fancybox.open(['.substr($pictures, 0, -1).']);
                 				});
                 			});
                 			-->
@@ -398,7 +401,7 @@ class CntndList {
     }
   }
 
-  private function doDownloadLinkField($name, $field, $extra=false){
+  private function doDownloadLinkField($name, $field, $extra=false, $optional=''){
     if (!empty($field['value']) AND $field['value']!=0){
       $target="_self";
       if ($field['value']!=999999999 AND $field['value']!=111111111 AND $field['value']!=222222222){
@@ -420,9 +423,14 @@ class CntndList {
           $link = "front_content.php?idart=".$field['link'];
           $icon = "linkintern";
       }
+
       $pikto='';
       if ($field['value']!=999999999 && $extra){
-        $pikto = 'pikto-after pikto--'.self::getLinkIcon($icon);
+        $pikto='pikto-after ';
+        if (!empty($optional) && $optional=='before'){
+          $pikto='pikto-before ';
+        }
+        $pikto .= 'pikto--'.self::getLinkIcon($icon);
       }
 
       if (!empty($field['target']) && $field['target']!="auto"){

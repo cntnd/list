@@ -7,12 +7,14 @@ include_once("class.cntnd_list_util.php");
  */
 class CntndListOutput {
 
+  private $cfgClient;
   private $listname;
   protected $documents=array();
   protected $images=array();
   protected $imageFolders=array();
 
-  function __construct($documents,$images,$imageFolders,$listname) {
+  function __construct($documents,$images,$imageFolders,$listname,$cfgClient) {
+    $this->cfgClient = $cfgClient;
     $this->documents=$documents;
     $this->images=$images;
     $this->imageFolders=$imageFolders;
@@ -83,9 +85,9 @@ class CntndListOutput {
     return $input;
   }
 
-  private function gallery($label, $name, $value, $extra){
+  private function gallery($label, $name, $value, $extra, $optional){
     if (!$value){
-      $value=array('value'=>'','link'=>'','thumbnail'=>'');
+      $value=array('value'=>'','link'=>'','thumbnail'=>'','comment'=>'');
     }
     $input = $this->dropdownMedia($name.'[value]',$label,$this->imageFolders,'dirname',$value['value']);
 
@@ -97,6 +99,13 @@ class CntndListOutput {
     }
     else if ($extra=='thumbnail'){
       $input.= $this->dropdownMedia($name.'[thumbnail]','<i>Vorschaubild:</i>',$this->images,'filename',$value['thumbnail']);
+    }
+    if ($optional=='comment'){
+      $folder=$this->cfgClient["upl"]["path"].$this->imageFolders[$value['value']]['dirname'];
+      $input.= '<div class="form-group">';
+      $input.= '<label><i>Bildlegende (.txt):</i></label>';
+      $input.= $this->dropdownFilesInFolder($name.'[comment]', "bildlegende.txt", $folder, ".txt", $value['comment']);
+      $input.= '</div>';
     }
     return $input;
   }
@@ -139,6 +148,27 @@ class CntndListOutput {
     return $input;
   }
 
+  private function dropdownFilesInFolder($name, $default, $folder, $ext, $value){
+    $input = '<select name="'.$name.'">'."\n";
+    $input.= '<option value="'.$default.'">-- Standard: '.$default.' --</option>'."\n";
+    foreach(scandir($folder) as $file) {
+      if (!is_dir($folder.$file) && self::endsWith($file,$ext)) {
+        ($value == $file) ? $sel = ' selected="selected"' : $sel = '';
+        $input.= '<option value="'.$file.'" '.$sel.'>'.$file.'</option>'."\n";
+      }
+    }
+    $input.= '</select>'."\n";
+    return $input;
+  }
+
+  private static function endsWith($haystack, $needle){
+    $length = strlen($needle);
+    if ($length == 0) {
+      return true;
+    }
+    return (substr($haystack, -$length) === $needle);
+  }
+
   private function urlTarget($name, $value){
     $input = '<div class="form-group w-25">'."\n";
     $input.= '<label><i>Target:</i></label>'."\n";
@@ -172,23 +202,24 @@ class CntndListOutput {
     $label = 'data['.$index.'][label]';
     $type = 'data['.$index.'][type]';
     $extra = 'data['.$index.'][extra]';
+    $optional = 'data['.$index.'][optional]';
 
     $name = 'data['.$listname.']['.$data[$field].']';
     $valueName = $name.'[value]';
 
-    $input = $this->renderInput($name, $data[$type], $data[$label], $data[$extra]);
+    $input = $this->renderInput($name, $data[$type], $data[$label], $data[$extra], $data[$optional]);
     $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$data[$type].'" />';
     return $input;
   }
 
-  public function entry($fieldName,$label,$key,$field,$listname,$extra=''){
+  public function entry($fieldName,$label,$key,$field,$listname,$extra='',$optional=''){
     $name = 'data['.$key.']['.$listname.']['.$fieldName.']';
-    $input = $this->renderInput($name, $field['type'], $label, $extra, $field);
+    $input = $this->renderInput($name, $field['type'], $label, $extra, $optional, $field);
     $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$field['type'].'" />';
     return $input;
   }
 
-  private function renderInput($name, $type, $label, $extra='', $value=false){
+  private function renderInput($name, $type, $label, $extra='', $optional='', $value=false){
     $valueName = $name.'[value]';
     if ($value){
       $valueValue = $value['value'];
@@ -219,7 +250,7 @@ class CntndListOutput {
           $input.= $this->image($label,$name,$value,$extra);
           break;
       case 'gallery':
-          $input.= $this->gallery($label,$name,$value,$extra);
+          $input.= $this->gallery($label,$name,$value,$extra,$optional);
           break;
       default:
           $input.= '<div class="form-group">';

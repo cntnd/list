@@ -26,7 +26,7 @@ gulp.task('sass', function() {
 });
 
 gulp.task('zip', function() {
-  return gulp.src(['src/**/*','!src/scss*'])
+  return gulp.src(['src/**/*','!src/{scss,scss/**,sql,sql/**}'])
   		.pipe(zip('cntnd_list.zip'))
   		.pipe(gulp.dest('dist'));
 });

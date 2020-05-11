@@ -88,14 +88,20 @@ class CntndListInput {
   }
 
   public static function hasOptionalField($type){
-    return ($type=="gallery");
+    return ($type=="gallery" OR $type=="downloadlink");
   }
 
   public static function getOptionalFields($type,$value){
     switch($type){
+      case 'downloadlink':
+        $optionals[0]['value']='after';
+        $optionals[0]['text'] ='Piktogramme nach dem Linktitel (Standard)';
+        $optionals[1]['value']='before';
+        $optionals[1]['text'] ='Piktogramme vor dem Linktitel';
+        break;
       case 'gallery':
         $optionals[0]['value']='comment';
-        $optionals[0]['text'] ='mit Kommentaren ("kommentare.txt" in Ordner)';
+        $optionals[0]['text'] ='mit Bildlegende (.txt Datei im Ordner)';
         break;
     }
     $ret= '<option value="0">  --bitte wählen-- </option> ';

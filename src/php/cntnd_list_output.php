@@ -89,7 +89,8 @@ if ($editmode){
   	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="cntnd_list" method="post">
       <div class="cntnd_alert cntnd_alert-danger hide"><?= mi18n("INVALID_FORM") ?></div>
       <?php
-      $cntndListOutput = new CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders(),$listname);
+      $cfgClient = cRegistry::getClientConfig();
+      $cntndListOutput = new CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders(),$listname,$cfgClient[$client]);
       for ($index=0;$index<$count;$index++){
           echo $cntndListOutput->input($data,$values[$index],$index,$listname);
       }
@@ -115,7 +116,8 @@ if ($editmode){
         foreach ($value as $name => $field) {
           $label = 'data['.$index.'][label]';
           $extra = 'data['.$index.'][extra]';
-          echo $cntndListOutput->entry($name,$data[$label],$key,$field,$listname,$data[$extra]);
+          $optional = 'data['.$index.'][optional]';
+          echo $cntndListOutput->entry($name,$data[$label],$key,$field,$listname,$data[$extra],$data[$optional]);
           $index++;
         }
         echo '<button class="cntnd_list_action btn btn-primary" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="update">'.mi18n("SAVE").'</button>'."\n";
