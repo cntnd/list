@@ -161,6 +161,23 @@ class CntndListOutput {
     return $input;
   }
 
+  private function dropdown($label, $name, $value, $values){
+    $list = explode(PHP_EOL, $values);
+
+    $input.= '<div class="form-group">'."\n";
+    $input.= '<label>'.$label.'</label>'."\n";
+    $input = '<select name="'.$name.'">'."\n";
+    $input.= '<option value="">-- keine Auswahl --</option>'."\n";
+    foreach($list as $row) {
+        list($selection,$display) = explode(",",$row);
+        ($value == $selection) ? $sel = ' selected="selected"' : $sel = '';
+        $input.= '<option value="'.$selection.'" '.$sel.'>'.$display.'</option>'."\n";
+    }
+    $input.= '</select>'."\n";
+    $input.= '</div>'."\n";
+    return $input;
+  }
+
   private static function endsWith($haystack, $needle){
     $length = strlen($needle);
     if ($length == 0) {
@@ -251,6 +268,9 @@ class CntndListOutput {
           break;
       case 'gallery':
           $input.= $this->gallery($label,$name,$value,$extra,$optional);
+          break;
+      case 'dropdown':
+          $input.= $this->dropdown($label,$name,$value,$extra);
           break;
       default:
           $input.= '<div class="form-group">';

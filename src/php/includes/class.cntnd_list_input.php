@@ -32,7 +32,8 @@ class CntndListInput {
                     <option value="downloadlink" '.$downloadlink.'> Link-, Downloadfeld </option>
                     <option value="url" '.$url.'> URL (Webseite, Bild, Dokument, Link, etc.)</option>
                     <option value="image" '.$image.'> Bild / Bilderstreifen (jedes Bild auswählen) </option>
-                    <option value="gallery" '.$gallery.'> Bildergalerie aus Ordner </option>';
+                    <option value="gallery" '.$gallery.'> Bildergalerie aus Ordner </option>
+                    <option value="dropdown" '.$dropdown.'> Dropdown aus eigener Liste </option>';
 
     return $choose_fields;
   }
@@ -85,6 +86,23 @@ class CntndListInput {
       }
     }
     return $ret;
+  }
+
+  public static function getCustomExtraFields($uuid,$extra,$type,$value){
+      switch($type){
+        case 'dropdown':
+          $ret = CntndListInput::dropdownCustomExtraField($uuid,$extra,$value);
+          break;
+      }
+      return $ret;
+  }
+
+  private static function dropdownCustomExtraField($uuid,$extra,$value){
+    echo '<div class="form-group">';
+    echo '<label for="dropdown-list">Dropdown-Liste (Pro Eintrag eine Zeile: Wert plus Anzeigetexte mit Komma getrennt):</label>';
+    echo '<textarea rows="4" data-uuid="'.$uuid.'" name="'.$extra.'" id="dropdown-list">'.$value.'</textarea>';
+    echo '<small>Bsp. für einen Eintrag: WERT,DIESER TEXT WIRD ANGEZEIGT</small>';
+    echo '</div>';
   }
 
   public static function hasOptionalField($type){

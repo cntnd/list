@@ -91,6 +91,9 @@ if (!empty($template) AND $template!="false"){
         echo '<select data-uuid="'.$uuid.'" name="'.$extra.'" id="extras">'.CntndListInput::getExtraFields($data[$type],$data[$extra],$dirs).'</select>';
         echo '</div>';
       }
+      if (CntndListInput::isCustomExtraField($data[$type])){
+        echo CntndListInput::getCustomExtraFields($uuid,$extra,$data[$type],$data[$extra]);
+      }
       if (CntndListInput::hasOptionalField($data[$type])){
         echo '<div class="form-group">';
         echo '<label for="optional">Zusatz:</label>';

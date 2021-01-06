@@ -14,6 +14,7 @@ To get started you have to run the [SQL statement located in `src/sql`](src/sql/
 * `URL`: Similar to `Link or Download` except it generates only a valid URL, no HTML
 * `Image`: Displays several Images choosen from a dropdown, with or without comments (for fancybox)
 * `Gallery (from folder)`: Displays a gallery choosen from a folder (several options how to display the gallery, with fancybox)
+* `Dropdown`: Choose value from a Dropdown list (display/value)
 
 ## CSS
 
