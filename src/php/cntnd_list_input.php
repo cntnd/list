@@ -22,10 +22,10 @@ $handle         = opendir($template_dir);
 while ($entryName = readdir($handle)){
     if (is_file($template_dir.$entryName)){
       $selected="";
-      if ($template==$template_dir.$entryName){
+      if ($template==$entryName){
         $selected = 'selected="selected"';
       }
-      $templateOptions[]='<option '.$selected.' value="'.$entryName.'">'.$entryName.'</option>';
+      $templateOptions[]='<ofix ption '.$selected.' value="'.$entryName.'">'.$entryName.'</option>';
     }
 }
 closedir($handle);
