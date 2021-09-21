@@ -25,7 +25,7 @@ while ($entryName = readdir($handle)){
       if ($template==$entryName){
         $selected = 'selected="selected"';
       }
-      $templateOptions[]='<ofix ption '.$selected.' value="'.$entryName.'">'.$entryName.'</option>';
+      $templateOptions[]='<option '.$selected.' value="'.$entryName.'">'.$entryName.'</option>';
     }
 }
 closedir($handle);
