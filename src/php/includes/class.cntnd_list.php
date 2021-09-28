@@ -1,6 +1,6 @@
 <?php
 
-include_once("class.cntnd_list_util.php");
+include_once("class.cntnd_util.php");
 include_once("Parsedown.php");
 
 /**
@@ -110,11 +110,11 @@ class CntndList {
   }
 
   private function escapeDate($string){
-    return CntndListUtil::escapeData($string);
+    return CntndUtil::escapeData($string);
   }
 
   private function unescapeDate($string){
-    return CntndListUtil::unescapeData($string);
+    return CntndUtil::unescapeData($string);
   }
 
   public function update($action, $index, $data, $values){
@@ -414,7 +414,7 @@ class CntndList {
           $link = $field['link'];
           $icon = "link";
           $target="_blank";
-          if (CntndListUtil::startsWith($link,"#")){
+          if (CntndUtil::startsWith($link,"#")){
             $icon="linkintern";
             $target="_self";
           }

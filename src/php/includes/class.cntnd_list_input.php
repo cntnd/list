@@ -1,6 +1,6 @@
 <?php
 
-include_once("class.cntnd_list_util.php");
+include_once("class.cntnd_util.php");
 
 /**
  * cntnd_list Input Class
@@ -8,7 +8,7 @@ include_once("class.cntnd_list_util.php");
 class CntndListInput {
 
   public static function unescapeData($string){
-    return CntndListUtil::unescapeData($string);
+    return CntndUtil::unescapeData($string);
   }
 
   public static function getChooseFields($field,$value){
