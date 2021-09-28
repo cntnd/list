@@ -1,6 +1,8 @@
 <?php
 
-include_once("class.cntnd_util.php");
+namespace Cntnd\DynList;
+
+require_once("class.cntnd_util.php");
 
 /**
  * cntnd_list Input Class

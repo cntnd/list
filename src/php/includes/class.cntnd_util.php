@@ -1,5 +1,7 @@
 <?php
 
+namespace Cntnd\DynList;
+
 /**
  * cntnd Util Class
  */

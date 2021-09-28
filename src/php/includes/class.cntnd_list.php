@@ -1,5 +1,9 @@
 <?php
 
+namespace Cntnd\DynList;
+
+use Parsedown;
+
 include_once("class.cntnd_util.php");
 include_once("Parsedown.php");
 
@@ -28,20 +32,20 @@ class CntndList extends CntndUtil {
     $this->lang = $lang;
     $this->listname = $listname;
     $this->client = $client;
-    $this->db = new cDb;
-    $this->tpl = new Template();
+    $this->db = new \cDb;
+    $this->tpl = new \Template();
 
-    $cfgClient = cRegistry::getClientConfig();
+    $cfgClient = \cRegistry::getClientConfig();
     $this->uploadDir = $cfgClient[$client]["upl"]["htmlpath"];
     $this->uploadPath = $cfgClient[$client]["upl"]["path"];
 
     // medien, images, folders
-    $cfg = cRegistry::getConfig();
+    $cfg = \cRegistry::getConfig();
 
     $sql = "SELECT * FROM :table WHERE idclient=:idclient ORDER BY dirname ASC, filename ASC";
     $values = array(
         'table' => $cfg['tab']['upl'],
-        'idclient' => cSecurity::toInteger($client)
+        'idclient' => \cSecurity::toInteger($client)
     );
     $this->db->query($sql, $values);
     while ($this->db->nextRecord()) {
@@ -95,8 +99,8 @@ class CntndList extends CntndUtil {
   public function store($data){
     $values = array(
         'listname' => $this->listname,
-        'idart' => cSecurity::toInteger($this->idart),
-        'idlang' => cSecurity::toInteger($this->lang),
+        'idart' => \cSecurity::toInteger($this->idart),
+        'idlang' => \cSecurity::toInteger($this->lang),
         'data' => self::escapeData($data)
     );
     $this->db->query("SELECT idlist FROM cntnd_dynlist WHERE listname=':listname' AND idart=:idart AND idlang=:idlang", $values);
@@ -193,7 +197,7 @@ class CntndList extends CntndUtil {
     if (!empty($field['value'])){
       $gallery = "";
       $galleryId = 'gallery'.rand(100,999);
-      $cfg = cRegistry::getConfig();
+      $cfg = \cRegistry::getConfig();
       $dirname = $this->folders[$field['value']]['dirname'];
 
       // Optionals: Kommentare

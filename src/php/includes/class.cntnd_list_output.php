@@ -1,11 +1,13 @@
 <?php
 
-include_once("class.cntnd_list_util.php");
+namespace Cntnd\DynList;
+
+include_once("class.cntnd_util.php");
 
 /**
  * cntnd_list Output Class
  */
-class CntndListOutput {
+class CntndListOutput extends CntndUtil {
 
   private $cfgClient;
   private $listname;
@@ -19,10 +21,6 @@ class CntndListOutput {
     $this->images=$images;
     $this->imageFolders=$imageFolders;
     $this->listname=$listname;
-  }
-
-  public static function unescapeData($string){
-    return CntndListUtil::unescapeData($string);
   }
 
   private function downloadlink($label, $name, $value){
@@ -159,14 +157,6 @@ class CntndListOutput {
     }
     $input.= '</select>'."\n";
     return $input;
-  }
-
-  private static function endsWith($haystack, $needle){
-    $length = strlen($needle);
-    if ($length == 0) {
-      return true;
-    }
-    return (substr($haystack, -$length) === $needle);
   }
 
   private function urlTarget($name, $value){
