@@ -5,11 +5,7 @@ include_once("class.cntnd_util.php");
 /**
  * cntnd_list Input Class
  */
-class CntndListInput {
-
-  public static function unescapeData($string){
-    return CntndUtil::unescapeData($string);
-  }
+class CntndListInput extends CntndUtil {
 
   public static function getChooseFields($field,$value){
     $internal="";

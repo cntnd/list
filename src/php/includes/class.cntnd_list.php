@@ -6,7 +6,7 @@ include_once("Parsedown.php");
 /**
  * cntnd_list Class
  */
-class CntndList {
+class CntndList extends CntndUtil {
 
   private $idart;
   private $lang;
@@ -86,7 +86,7 @@ class CntndList {
     $this->db->query($sql, $values);
     while ($this->db->nextRecord()) {
       if (is_string($this->db->f('serializeddata'))){
-        $data = $this->unescapeDate($this->db->f('serializeddata'));
+        $data = self::unescapeData($this->db->f('serializeddata'));
       }
     }
     return $data;
@@ -97,7 +97,7 @@ class CntndList {
         'listname' => $this->listname,
         'idart' => cSecurity::toInteger($this->idart),
         'idlang' => cSecurity::toInteger($this->lang),
-        'data' => $this->escapeDate($data)
+        'data' => self::escapeData($data)
     );
     $this->db->query("SELECT idlist FROM cntnd_dynlist WHERE listname=':listname' AND idart=:idart AND idlang=:idlang", $values);
     if (!$this->db->nextRecord()){
@@ -107,14 +107,6 @@ class CntndList {
         $sql = "UPDATE cntnd_dynlist SET serializeddata=':data' WHERE listname=':listname' AND idart=:idart AND idlang=:idlang";
     }
     $this->db->query($sql, $values);
-  }
-
-  private function escapeDate($string){
-    return CntndUtil::escapeData($string);
-  }
-
-  private function unescapeDate($string){
-    return CntndUtil::unescapeData($string);
   }
 
   public function update($action, $index, $data, $values){
@@ -414,7 +406,7 @@ class CntndList {
           $link = $field['link'];
           $icon = "link";
           $target="_blank";
-          if (CntndUtil::startsWith($link,"#")){
+          if (self::startsWith($link,"#")){
             $icon="linkintern";
             $target="_self";
           }
