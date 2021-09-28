@@ -47,7 +47,7 @@ if (!empty($template) AND $template!="false"){
   preg_match_all('@\{\w*?\}@is', $templateContent, $templateFields);
   $count = count(array_unique($templateFields[0]));
 }
-$data = CntndListOutput::unescapeData("CMS_VALUE[3]");
+$data = Cntnd\DynList\CntndListOutput::unescapeData("CMS_VALUE[3]");
 
 // values
 $cntndList = new CntndList($idart, $lang, $client, $listname);
@@ -65,7 +65,7 @@ if ($editmode){
       }
       // UPDATE
       else if(array_key_exists('action',$_POST) && array_key_exists('key',$_POST) && $_POST['listname']==$listname) {
-        $dataToUpdate = CntndListOutput::unescapeData($_POST['data']);
+        $dataToUpdate = Cntnd\DynList\CntndListOutput::unescapeData($_POST['data']);
         $values = $cntndList->update($_POST['action'],$_POST['key'],$dataToUpdate,$values);
       }
       // REORDER
@@ -90,7 +90,7 @@ if ($editmode){
       <div class="cntnd_alert cntnd_alert-danger hide"><?= mi18n("INVALID_FORM") ?></div>
       <?php
       $cfgClient = cRegistry::getClientConfig();
-      $cntndListOutput = new CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders(),$listname,$cfgClient[$client]);
+      $cntndListOutput = new Cntnd\DynList\CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders(),$listname,$cfgClient[$client]);
       for ($index=0;$index<$count;$index++){
           echo $cntndListOutput->input($data,$values[$index],$index,$listname);
       }

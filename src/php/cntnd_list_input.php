@@ -12,24 +12,11 @@ if (empty($listname)){
     $listname="cntnd_list";
 }
 $template = "CMS_VALUE[2]";
-$data = CntndListInput::unescapeData("CMS_VALUE[3]");
+$data = Cntnd\DynList\CntndListInput::unescapeData("CMS_VALUE[3]");
 
 // other/vars
 $uuid = rand();
-$templateOptions= array();
-$template_dir   = $cfgClient[$client]["module"]["path"].'cntnd_list/template/';
-$handle         = opendir($template_dir);
-while ($entryName = readdir($handle)){
-    if (is_file($template_dir.$entryName)){
-      $selected="";
-      if ($template==$entryName){
-        $selected = 'selected="selected"';
-      }
-      $templateOptions[]='<option '.$selected.' value="'.$entryName.'">'.$entryName.'</option>';
-    }
-}
-closedir($handle);
-asort($templateOptions);
+$templateOptions= Cntnd\DynList\CntndList::templates('cntnd_list', $client);
 
 $db=cRegistry::getDb();
 $sql = "SELECT DISTINCT dirname from ".$cfg["tab"]["upl"];
@@ -85,16 +72,16 @@ if (!empty($template) AND $template!="false"){
       echo '<td><input data-uuid="'.$uuid.'" type="text" name="'.$label.'" value="'.$data[$label].'" /></td>';
       echo '<td><select data-uuid="'.$uuid.'" name="'.$type.'">'.CntndListInput::getChooseFields($field,$data[$type]).'</select></td>';
       echo '<td class="form-horizontal">';
-      if (CntndListInput::isExtraField($data[$type])){
+      if (Cntnd\DynList\CntndListInput::isExtraField($data[$type])){
         echo '<div class="form-group">';
         echo '<label for="extras">Extras:</label>';
         echo '<select data-uuid="'.$uuid.'" name="'.$extra.'" id="extras">'.CntndListInput::getExtraFields($data[$type],$data[$extra],$dirs).'</select>';
         echo '</div>';
       }
-      if (CntndListInput::hasOptionalField($data[$type])){
+      if (Cntnd\DynList\CntndListInput::hasOptionalField($data[$type])){
         echo '<div class="form-group">';
         echo '<label for="optional">Zusatz:</label>';
-        echo '<select data-uuid="'.$uuid.'" name="'.$optional.'" id="optional">'.CntndListInput::getOptionalFields($data[$type],$data[$optional]).'</select>';
+        echo '<select data-uuid="'.$uuid.'" name="'.$optional.'" id="optional">'.Cntnd\DynList\CntndListInput::getOptionalFields($data[$type],$data[$optional]).'</select>';
         echo '</div>';
       }
       echo '</td>';
