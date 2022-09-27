@@ -25,14 +25,19 @@ gulp.task('sass', function() {
         .pipe(gulp.dest("src/css/"));
 });
 
+gulp.task('xampp', function () {
+    return gulp.src(['src/**','!src/{scss,scss/**}','!src/{sql,sql/**}'])
+        .pipe(gulp.dest('modules/'+pkg.name));
+});
+
 gulp.task('zip', function() {
-  return gulp.src(['src/**/*','!src/{scss,scss/**,sql,sql/**}'])
+    return gulp.src(['src/**','!src/{scss,scss/**}','!src/{sql,sql/**}'])
   		.pipe(zip(pkg.name+'.zip'))
   		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('clean', function () {
-  return del('dist/**/*');
+    return del(['dist/**/*','modules/**/*']);
 });
 
 // creates info.xml
@@ -60,3 +65,7 @@ gulp.task('info-xml', function () {
 gulp.task('default', gulp.series('sass','watch'));
 
 gulp.task('dist', gulp.series('clean','sass','info-xml','zip'));
+
+gulp.task('module', gulp.series('clean','sass','info-xml','xampp'));
+
+gulp.task('init', gulp.series('clean','sass','info-xml'));

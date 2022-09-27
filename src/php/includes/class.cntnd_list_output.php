@@ -2,7 +2,7 @@
 
 namespace Cntnd\DynList;
 
-include_once("class.cntnd_util.php");
+require_once("class.cntnd_util.php");
 
 /**
  * cntnd_list Output Class

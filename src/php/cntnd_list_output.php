@@ -23,7 +23,7 @@ if (!empty($sql_create)){
 defined('CON_FRAMEWORK') || die('Illegal call: Missing framework initialization - request aborted.');
 
 // editmode
-$editmode = cRegistry::isBackendEditMode();
+$editmode = \cRegistry::isBackendEditMode();
 
 // includes
 cInclude('module', 'includes/class.cntnd_list.php');
@@ -41,16 +41,15 @@ if (empty($listname)){
 $template = "CMS_VALUE[2]";
 $count = 0;
 if (!empty($template) AND $template!="false"){
-  $handle = fopen($template, "r");
-  $templateContent = fread($handle, filesize($template));
-  fclose($handle);
+  $file = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
+  $templateContent = file_get_contents($file);
   preg_match_all('@\{\w*?\}@is', $templateContent, $templateFields);
   $count = count(array_unique($templateFields[0]));
 }
 $data = Cntnd\DynList\CntndListOutput::unescapeData("CMS_VALUE[3]");
 
 // values
-$cntndList = new CntndList($idart, $lang, $client, $listname);
+$cntndList = new Cntnd\DynList\CntndList($idart, $lang, $client, $listname);
 $values = $cntndList->load();
 
 // module
@@ -89,7 +88,7 @@ if ($editmode){
   	<form data-uuid="<?= $formId ?>" id="<?= $formId ?>" name="cntnd_list" method="post">
       <div class="cntnd_alert cntnd_alert-danger hide"><?= mi18n("INVALID_FORM") ?></div>
       <?php
-      $cfgClient = cRegistry::getClientConfig();
+      $cfgClient = \cRegistry::getClientConfig();
       $cntndListOutput = new Cntnd\DynList\CntndListOutput($cntndList->medien(),$cntndList->images(),$cntndList->folders(),$listname,$cfgClient[$client]);
       for ($index=0;$index<$count;$index++){
           echo $cntndListOutput->input($data,$values[$index],$index,$listname);

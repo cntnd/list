@@ -1,0 +1,5 @@
+{
+    "require": {
+        "cntnd/cntnd-skeleton-cli": "^1.0.0"
+    }
+}

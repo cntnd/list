@@ -2,10 +2,8 @@
 
 namespace Cntnd\DynList;
 
-use Parsedown;
-
-include_once("class.cntnd_util.php");
-include_once("Parsedown.php");
+require_once("class.cntnd_util.php");
+require_once("Parsedown.php");
 
 /**
  * cntnd_list Class
@@ -84,8 +82,8 @@ class CntndList extends CntndUtil {
     $sql = "SELECT serializeddata FROM cntnd_dynlist WHERE listname=':listname' AND idart=:idart AND idlang=:idlang";
     $values = array(
         'listname' => $this->listname,
-        'idart' => cSecurity::toInteger($this->idart),
-        'idlang' => cSecurity::toInteger($this->lang)
+        'idart' => \cSecurity::toInteger($this->idart),
+        'idlang' => \cSecurity::toInteger($this->lang)
     );
     $this->db->query($sql, $values);
     while ($this->db->nextRecord()) {
@@ -353,14 +351,18 @@ class CntndList extends CntndUtil {
       }
       // Markdown parsed with Parsedown
       else if ($extra=='markdown'){
-        $parsedown = new Parsedown();
+        $parsedown = new \Parsedown();
         $parsedown->setSafeMode(true);
         $text = $parsedown->line($field['value']);
       }
       else {
         $text = $field['value'];
       }
-      $this->tpl->set('d', $name, '<div class="'.$this->listname.' cntnd_text">'.stripslashes($text).'</div>');
+      $output = '<div class="'.$this->listname.' cntnd_text">'.stripslashes($text).'</div>';
+      if ($extra=='plain'){
+        $output = stripslashes($text);
+      }
+      $this->tpl->set('d', $name, $output);
     }
     else {
         $this->tpl->set('d', $name, "");
@@ -378,7 +380,7 @@ class CntndList extends CntndUtil {
 
   private function doTitleField($name, $field){
     if (!empty($value['value'])){
-        $this->tpl->set('d', $name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
+      $this->tpl->set('d', $name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
     }
     else {
         $this->tpl->set('d', $name, "");

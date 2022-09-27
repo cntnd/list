@@ -2,12 +2,10 @@
 
 namespace Cntnd\DynList;
 
-require_once("class.cntnd_util.php");
-
 /**
  * cntnd_list Input Class
  */
-class CntndListInput extends CntndUtil {
+class CntndListInput {
 
   public static function getChooseFields($field,$value){
     $internal="";
@@ -36,7 +34,7 @@ class CntndListInput extends CntndUtil {
   }
 
   public static function isExtraField($type){
-    return ($type=="downloadlink" OR $type=="textarea" OR $type=="url" OR $type=="image" OR $type=="gallery");
+    return ($type=="downloadlink" OR $type=="text" OR $type=="textarea" OR $type=="url" OR $type=="image" OR $type=="gallery");
   }
 
   public static function getExtraFields($type,$value,$dirs){
@@ -47,11 +45,17 @@ class CntndListInput extends CntndUtil {
         $extras[1]['value']=false;
         $extras[1]['text'] ='ohne Piktogramm';
         break;
+      case 'text':
+        $extras[0]['value']='plain';
+        $extras[0]['text'] ='nur Text, keine div-Tags';
+        break;
       case 'textarea':
         $extras[0]['value']='extended';
         $extras[0]['text'] ='Extended-Text';
         $extras[1]['value']='markdown';
         $extras[1]['text'] ='Markdown';
+        $extras[2]['value']='plain';
+        $extras[2]['text'] ='nur Text, keine div-Tags';
         break;
       case 'url':
         $extras[0]['value']='documents';

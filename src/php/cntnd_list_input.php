@@ -2,6 +2,7 @@
 // cntnd_list_input
 
 // includes
+cInclude('module', 'includes/class.cntnd_list.php');
 cInclude('module', 'includes/class.cntnd_list_input.php');
 cInclude('module', 'includes/script.cntnd_list_input.php');
 cInclude('module', 'includes/style.cntnd_list_input.php');
@@ -12,13 +13,13 @@ if (empty($listname)){
     $listname="cntnd_list";
 }
 $template = "CMS_VALUE[2]";
-$data = Cntnd\DynList\CntndListInput::unescapeData("CMS_VALUE[3]");
+$data = Cntnd\DynList\CntndList::unescapeData("CMS_VALUE[3]");
 
 // other/vars
 $uuid = rand();
-$templateOptions= Cntnd\DynList\CntndList::templates('cntnd_list', $client);
+$templates= Cntnd\DynList\CntndList::templates('cntnd_list', $client);
 
-$db=cRegistry::getDb();
+$db=\cRegistry::getDb();
 $sql = "SELECT DISTINCT dirname from ".$cfg["tab"]["upl"];
 $db->query($sql);
 while ( $db->nextRecord() ) {
@@ -36,25 +37,28 @@ if (!$template OR empty($template) OR $template=="false"){
     <input id="listname_<?= $uuid ?>" name="CMS_VAR[1]" type="text" class="cntnd_list_id" value="<?= $listname ?>" />
   </div>
 
-  <div class="form-group">
-    <label for="template_<?= $uuid ?>"><?= mi18n("TEMPLATE") ?></label>
-    <select name="CMS_VAR[2]" id="template_<?= $uuid ?>" size="1">
-      <option value="false"><?= mi18n("SELECT_CHOOSE") ?></option>
-      <?php
-        foreach ($templateOptions as $value) {
-          echo $value;
-        }
-      ?>
-    </select>
-  </div>
+    <div class="form-group">
+        <label for="template_<?= $uuid ?>"><?= mi18n("TEMPLATE") ?></label>
+        <select name="CMS_VAR[2]" id="template_<?= $uuid ?>" size="1">
+            <option value="false"><?= mi18n("SELECT_CHOOSE") ?></option>
+            <?php
+            foreach ($templates as $template_file) {
+                $selected="";
+                if ($template==$template_file){
+                    $selected = 'selected="selected"';
+                }
+                echo '<option value="'.$template_file.'" '.$selected.'>'.$template_file.'</option>';
+            }
+            ?>
+        </select>
+    </div>
 </div>
 
 <hr />
 <?php
 if (!empty($template) AND $template!="false"){
-  $handle = fopen($template, "r");
-  $templateContent = fread($handle, filesize($template));
-  fclose($handle);
+  $file = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
+  $templateContent = file_get_contents($file);
   preg_match_all('@\{\w*?\}@is', $templateContent, $fields);
 
   echo '<table class="cntnd_list" data-uuid="'.$uuid.'">';
@@ -70,12 +74,12 @@ if (!empty($template) AND $template!="false"){
       echo '<tr>';
       echo '<td><b>'.$field.'</b><input data-uuid="'.$uuid.'" type="hidden" name="'.$tpl_field.'" value="'.$field.'" /></td>';
       echo '<td><input data-uuid="'.$uuid.'" type="text" name="'.$label.'" value="'.$data[$label].'" /></td>';
-      echo '<td><select data-uuid="'.$uuid.'" name="'.$type.'">'.CntndListInput::getChooseFields($field,$data[$type]).'</select></td>';
+      echo '<td><select data-uuid="'.$uuid.'" name="'.$type.'">'.Cntnd\DynList\CntndListInput::getChooseFields($field,$data[$type]).'</select></td>';
       echo '<td class="form-horizontal">';
       if (Cntnd\DynList\CntndListInput::isExtraField($data[$type])){
         echo '<div class="form-group">';
         echo '<label for="extras">Extras:</label>';
-        echo '<select data-uuid="'.$uuid.'" name="'.$extra.'" id="extras">'.CntndListInput::getExtraFields($data[$type],$data[$extra],$dirs).'</select>';
+        echo '<select data-uuid="'.$uuid.'" name="'.$extra.'" id="extras">'.Cntnd\DynList\CntndListInput::getExtraFields($data[$type],$data[$extra],$dirs).'</select>';
         echo '</div>';
       }
       if (Cntnd\DynList\CntndListInput::hasOptionalField($data[$type])){
