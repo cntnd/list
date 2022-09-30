@@ -23,7 +23,7 @@ class CntndListOutput extends CntndUtil {
     $this->listname=$listname;
   }
 
-  private function downloadlink($label, $name, $value){
+  private function downloadlink($label, $name, $value, $optional=array()){
     $disabled='disabled="disabled"';
     if (!$value){
       $value=array('value'=>'','link'=>'');
@@ -31,7 +31,7 @@ class CntndListOutput extends CntndUtil {
     else if ($value['value']=='111111111' || $value['value']=='222222222') {
       $disabled='';
     }
-    $input = $this->dropdownMedia($name.'[value]',$label,$this->documents,'filename',$value['value'],true,true,true,$name.'[target]',$value['target']);
+    $input = $this->dropdownMedia($name.'[value]',$label,$this->restrictToFolder($this->documents,$optional[0]),'filename',$value['value'],true,true,true,$name.'[target]',$value['target']);
     $input.= '<div class="form-group '.$this->listname.' cntnd_url_path">';
     $input.= '<label><i>Pfad (URL, idart):</i></label>';
     $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" '.$disabled.' />';
@@ -39,15 +39,15 @@ class CntndListOutput extends CntndUtil {
     return $input;
   }
 
-  private function url($label, $name, $value, $extra){
+  private function url($label, $name, $value, $extra, $optional=array()){
     if (!$value){
       $value=array('value'=>'','link'=>'');
     }
     if ($extra=='images'){
-      $list = $this->images;
+      $list = $this->restrictToFolder($this->images,$optional[0]);
     }
     else if($extra=='documents') {
-      $list = $this->documents;
+      $list = $this->restrictToFolder($this->documents,$optional[0]);
     }
     else {
       if (empty($value['value'])){
@@ -68,11 +68,11 @@ class CntndListOutput extends CntndUtil {
     return $input;
   }
 
-  private function image($label, $name, $value, $extra){
+  private function image($label, $name, $value, $extra, $optional=array()){
     if (!$value){
       $value=array('value'=>'','comment'=>'');
     }
-    $input = $this->dropdownMedia($name.'[value]',$label,$this->images,'filename',$value['value']);
+    $input = $this->dropdownMedia($name.'[value]',$label,$this->restrictToFolder($this->images,$optional[0]),'filename',$value['value']);
 
     if ($extra){
       $input.= '<div class="form-group">';
@@ -83,11 +83,44 @@ class CntndListOutput extends CntndUtil {
     return $input;
   }
 
-  private function gallery($label, $name, $value, $extra, $optional){
+  private function restrictToFolder($list, $restriction='') {
+    if (!empty($restriction)) {
+      return array_filter($list, function ($value) use ($restriction) {
+        return self::startsWith($value['dirname'], $restriction);
+      });
+    }
+    return $list;
+  }
+
+
+  private function dropdown($label, $name, $value, $optional=array()){
+    $input = '<div class="form-group">';
+    $input.= '<label>'.$label.'</label>';
+    $input.= '<select name="'.$name.'" class="cntnd_dropdown" data-listname="'.$this->listname.'">'."\n";
+    $input.= '<option value="">-- kein --</option>'."\n";
+    $list = explode (",", $optional[0]);
+    foreach ($list as $item) {
+      $key = $this->dropdownValueToKey($item);
+      ($value == $key) ? $sel = ' selected="selected"' : $sel = '';
+      $input.= '<option value="'.$key.'" '.$sel.'>'.$item.'</option>'."\n";
+    }
+    $input.= '</select>'."\n";
+    $input.= '</div>';
+    return $input;
+  }
+
+  private function dropdownValueToKey($value) {
+    $clean = str_replace('&nbsp;', ' ', $value);
+    $clean = strip_tags($clean);
+    $clean = trim($clean);
+    return preg_replace( '/[\W]/', '', $clean);
+  }
+
+  private function gallery($label, $name, $value, $extra, $optional=array()){
     if (!$value){
       $value=array('value'=>'','link'=>'','thumbnail'=>'','comment'=>'');
     }
-    $input = $this->dropdownMedia($name.'[value]',$label,$this->imageFolders,'dirname',$value['value']);
+    $input = $this->dropdownMedia($name.'[value]',$label,$this->restrictToFolder($this->imageFolders,$optional[1]),'dirname',$value['value']);
 
     if ($extra=='link'){
       $input.= '<div class="form-group">';
@@ -96,9 +129,9 @@ class CntndListOutput extends CntndUtil {
       $input.= '</div>';
     }
     else if ($extra=='thumbnail'){
-      $input.= $this->dropdownMedia($name.'[thumbnail]','<i>Vorschaubild:</i>',$this->images,'filename',$value['thumbnail']);
+      $input.= $this->dropdownMedia($name.'[thumbnail]','<i>Vorschaubild:</i>',$this->restrictToFolder($this->images,$optional[1]),'filename',$value['thumbnail']);
     }
-    if ($optional=='comment'){
+    if ($optional[0]=='comment'){
       $folder=$this->cfgClient["upl"]["path"].$this->imageFolders[$value['value']]['dirname'];
       $input.= '<div class="form-group">';
       $input.= '<label><i>Bildlegende (.txt):</i></label>';
@@ -133,8 +166,8 @@ class CntndListOutput extends CntndUtil {
       $input.= '<option value="222222222" '.$sel.'> -Link intern (idart=)- </option>'."\n";
     }
     foreach ($list as $medium) {
-       ($value == $medium['idupl']) ? $sel = ' selected="selected"' : $sel = '';
-       $input.= '<option value="'.$medium['idupl'].'" '.$sel.'>'.$medium[$labelList].'</option>'."\n";
+      ($value == $medium['idupl']) ? $sel = ' selected="selected"' : $sel = '';
+      $input.= '<option value="'.$medium['idupl'].'" '.$sel.'>'.$medium[$labelList].'</option>'."\n";
     }
     $input.= '</select>'."\n";
     $input.= '</div>';
@@ -197,19 +230,19 @@ class CntndListOutput extends CntndUtil {
     $name = 'data['.$listname.']['.$data[$field].']';
     $valueName = $name.'[value]';
 
-    $input = $this->renderInput($name, $data[$type], $data[$label], $data[$extra], $data[$optional]);
+    $input = $this->renderInput($name, $data[$type], $data[$label], $data[$extra], self::optionals($data, $optional));
     $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$data[$type].'" />';
     return $input;
   }
 
-  public function entry($fieldName,$label,$key,$field,$listname,$extra='',$optional=''){
+  public function entry($fieldName,$label,$key,$field,$listname,$extra='',$optional=array()){
     $name = 'data['.$key.']['.$listname.']['.$fieldName.']';
     $input = $this->renderInput($name, $field['type'], $label, $extra, $optional, $field);
     $input.= '<input type="hidden" name="'.$name.'[type]" value="'.$field['type'].'" />';
     return $input;
   }
 
-  private function renderInput($name, $type, $label, $extra='', $optional='', $value=false){
+  private function renderInput($name, $type, $label, $extra='', $optional=array(), $value=false){
     $valueName = $name.'[value]';
     if ($value){
       $valueValue = $value['value'];
@@ -231,17 +264,20 @@ class CntndListOutput extends CntndUtil {
           $input.= '</div>';
           break;
       case 'downloadlink':
-          $input.= $this->downloadlink($label,$name,$value);
+          $input.= $this->downloadlink($label,$name,$value,$optional);
           break;
       case 'url':
-          $input.= $this->url($label,$name,$value,$extra);
+          $input.= $this->url($label,$name,$value,$extra,$optional);
           break;
       case 'image':
-          $input.= $this->image($label,$name,$value,$extra);
+          $input.= $this->image($label,$name,$value,$extra,$optional);
           break;
       case 'gallery':
           $input.= $this->gallery($label,$name,$value,$extra,$optional);
           break;
+      case 'dropdown':
+        $input.= $this->dropdown($label,$valueName,$valueValue,$optional);
+        break;
       default:
           $input.= '<div class="form-group">';
           $input.= '<label>'.$label.'</label>';
@@ -249,6 +285,13 @@ class CntndListOutput extends CntndUtil {
           $input.= '</div>';
     }
     return $input;
+  }
+
+  public static function optionals($data, $optional) {
+    $optionals = array_filter($data, function($key) use ($optional) {
+      return strpos($key, $optional) === 0;
+    }, ARRAY_FILTER_USE_KEY);
+    return array_values($optionals);
   }
 }
 ?>

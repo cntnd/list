@@ -17,9 +17,9 @@ $( document ).ready(function() {
             }
           }
         }
-      };
+      }
       return JSON.stringify(o);
-  };
+  }
 
   function gatherElements(uuid){
     if (uuid!==undefined){

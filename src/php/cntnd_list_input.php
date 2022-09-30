@@ -19,13 +19,6 @@ $data = Cntnd\DynList\CntndList::unescapeData("CMS_VALUE[3]");
 $uuid = rand();
 $templates= Cntnd\DynList\CntndList::templates('cntnd_list', $client);
 
-$db=\cRegistry::getDb();
-$sql = "SELECT DISTINCT dirname from ".$cfg["tab"]["upl"];
-$db->query($sql);
-while ( $db->nextRecord() ) {
-    $dirs[] = $db->f("dirname");
-}
-
 if (!$template OR empty($template) OR $template=="false"){
   echo '<div class="cntnd_alert cntnd_alert-primary">'.mi18n("CHOOSE_TEMPLATE").'</div>';
 }
@@ -61,7 +54,7 @@ if (!empty($template) AND $template!="false"){
   $templateContent = file_get_contents($file);
   preg_match_all('@\{\w*?\}@is', $templateContent, $fields);
 
-  echo '<table class="cntnd_list" data-uuid="'.$uuid.'">';
+  echo '<div class="cntnd_list d-flex" data-uuid="'.$uuid.'">';
   $index=0;
   $count = count(array_unique($fields[0]));
   foreach(array_unique($fields[0]) as $field){
@@ -71,29 +64,36 @@ if (!empty($template) AND $template!="false"){
       $extra ='data['.$index.'][extra]';
       $optional ='data['.$index.'][optional]';
 
-      echo '<tr>';
-      echo '<td><b>'.$field.'</b><input data-uuid="'.$uuid.'" type="hidden" name="'.$tpl_field.'" value="'.$field.'" /></td>';
-      echo '<td><input data-uuid="'.$uuid.'" type="text" name="'.$label.'" value="'.$data[$label].'" /></td>';
-      echo '<td><select data-uuid="'.$uuid.'" name="'.$type.'">'.Cntnd\DynList\CntndListInput::getChooseFields($field,$data[$type]).'</select></td>';
-      echo '<td class="form-horizontal">';
-      if (Cntnd\DynList\CntndListInput::isExtraField($data[$type])){
-        echo '<div class="form-group">';
-        echo '<label for="extras">Extras:</label>';
-        echo '<select data-uuid="'.$uuid.'" name="'.$extra.'" id="extras">'.Cntnd\DynList\CntndListInput::getExtraFields($data[$type],$data[$extra],$dirs).'</select>';
-        echo '</div>';
-      }
-      if (Cntnd\DynList\CntndListInput::hasOptionalField($data[$type])){
-        echo '<div class="form-group">';
-        echo '<label for="optional">Zusatz:</label>';
-        echo '<select data-uuid="'.$uuid.'" name="'.$optional.'" id="optional">'.Cntnd\DynList\CntndListInput::getOptionalFields($data[$type],$data[$optional]).'</select>';
-        echo '</div>';
-      }
-      echo '</td>';
-      echo '</tr>';
+      echo '<div class="form-vertical w-100">'."\n";
+      echo '<fieldset class="form-vertical d-flex"><legend>'.$field.'</legend>'."\n";
+      echo '<div class="form-group w-25">'."\n";
+      echo '<input data-uuid="'.$uuid.'" type="hidden" name="'.$tpl_field.'" value="'.$field.'" />';
+      echo '<label for="'.$label.'">'.mi18n("FIELD_LABEL").'</label>'."\n";
+      echo '<input data-uuid="'.$uuid.'" id="'.$label.'" name="'.$label.'" type="text" value="'.$data[$label].'"/>'."\n";
+      echo '</div>'."\n";
 
+      echo '<div class="form-group w-25">'."\n";
+      echo '<label for="'.$type.'">'.mi18n("FIELD_TYPE").'</label>'."\n";
+      echo '<select data-uuid="'.$uuid.'" name="'.$type.'">'.Cntnd\DynList\CntndListInput::getChooseFields($field,$data[$type]).'</select>'."\n";
+      echo '</div>'."\n";
+
+      if (Cntnd\DynList\CntndListInput::isExtraField($data[$type]) OR Cntnd\DynList\CntndListInput::hasOptionalField($data[$type])) {
+          echo '<fieldset class="w-33"><legend>' . mi18n("FIELD_EXTRAS") . '</legend>' . "\n";
+          if (Cntnd\DynList\CntndListInput::isExtraField($data[$type])) {
+              echo '<div class="form-group">';
+              echo '<label for="extras">Extras:</label>';
+              echo '<select data-uuid="' . $uuid . '" name="' . $extra . '" id="extras">' . Cntnd\DynList\CntndListInput::getExtraFields($data[$type], $data[$extra]) . '</select>';
+              echo '</div>';
+          }
+          if (Cntnd\DynList\CntndListInput::hasOptionalField($data[$type])) {
+              echo Cntnd\DynList\CntndListInput::getOptionalFields($uuid, $optional, $data[$type], $data, $client);
+          }
+          echo '</fieldset>' . "\n";
+      }
+      echo '</div>'."\n";
       $index++;
   }
-  echo '</table>';
+  echo '</div>';
   echo '<input type="hidden" name="CMS_VAR[3]" id="content_'.$uuid.'" value="CMS_VALUE[3]" />';
 }
 ?><?php

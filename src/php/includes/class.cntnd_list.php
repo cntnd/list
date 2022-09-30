@@ -148,7 +148,7 @@ class CntndList extends CntndUtil {
         foreach ($value as $name => $field) {
           $extra = 'data['.$index.'][extra]';
           $optional = 'data['.$index.'][optional]';
-          $this->renderField(self::tplName($name), $field, $data[$extra], $data[$optional]);
+          $this->renderField(self::tplName($name), $field, $data[$extra], self::optionals($data, $optional));
           $index++;
         }
         $this->tpl->next();
@@ -173,6 +173,9 @@ class CntndList extends CntndUtil {
           break;
       case 'linktext':
           $this->doLinkField($name, $field);
+          break;
+      case 'dropdown':
+          $this->doDropdownField($name, $field, $extra, $optional);
           break;
       case 'titel':
           $this->doTitleField($name, $field);
@@ -338,6 +341,38 @@ class CntndList extends CntndUtil {
     }
   }
 
+  private function doDropdownField($name,$field,$extra=false,$optional=array()){
+    if (!empty($field['value'])){
+      $text = $this->dropdownKeyToValue($field['value'],$optional[0]);
+      $output = '<div class="'.$this->listname.' cntnd_text">'.$text.'</div>';
+      if ($extra=='plain'){
+        $output = $text;
+      }
+      $this->tpl->set('d', $name, $output);
+    }
+    else {
+      $this->tpl->set('d', $name, "");
+    }
+  }
+
+  private function dropdownKeyToValue($key, $optionals) {
+    $list = explode (",", $optionals);
+    $value = '';
+    foreach ($list as $val) {
+      if ($this->dropdownValueToKey($val)==$key) {
+        $value = $val;
+      }
+    }
+    return $value;
+  }
+
+  private function dropdownValueToKey($value) {
+    $clean = str_replace('&nbsp;', ' ', $value);
+    $clean = strip_tags($clean);
+    $clean = trim($clean);
+    return preg_replace( '/[\W]/', '', $clean);
+  }
+
   private function doField($name,$field,$extra=false){
     if (!empty($field['value'])){
       // Extended > - lorem = List, etc.
@@ -379,7 +414,7 @@ class CntndList extends CntndUtil {
   }
 
   private function doTitleField($name, $field){
-    if (!empty($value['value'])){
+    if (!empty($field['value'])){
       $this->tpl->set('d', $name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
     }
     else {
@@ -399,7 +434,7 @@ class CntndList extends CntndUtil {
     }
   }
 
-  private function doDownloadLinkField($name, $field, $extra=false, $optional=''){
+  private function doDownloadLinkField($name, $field, $extra=false, $optional=array()){
     if (!empty($field['value']) AND $field['value']!=0){
       $target="_self";
       if ($field['value']!=999999999 AND $field['value']!=111111111 AND $field['value']!=222222222){
@@ -425,7 +460,7 @@ class CntndList extends CntndUtil {
       $pikto='';
       if ($field['value']!=999999999 && $extra){
         $pikto='pikto-after ';
-        if (!empty($optional) && $optional=='before'){
+        if (!empty($optional[0]) && $optional[0]=='before'){
           $pikto='pikto-before ';
         }
         $pikto .= 'pikto--'.self::getLinkIcon($icon);
@@ -491,6 +526,13 @@ class CntndList extends CntndUtil {
     echo "var elements_$this->listname = document.getElementById('cntnd_list_items-$this->listname');\n";
     echo "Sortable.create(elements_$this->listname, { draggable: '.listitem', onEnd: function(){ onReordering('$this->listname') }});\n";
     echo '</script>'."\n";
+  }
+
+  public static function optionals($data, $optional) {
+    $optionals = array_filter($data, function($key) use ($optional) {
+      return strpos($key, $optional) === 0;
+    }, ARRAY_FILTER_USE_KEY);
+    return array_values($optionals);
   }
 }
 

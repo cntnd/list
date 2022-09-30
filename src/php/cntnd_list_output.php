@@ -116,7 +116,8 @@ if ($editmode){
           $label = 'data['.$index.'][label]';
           $extra = 'data['.$index.'][extra]';
           $optional = 'data['.$index.'][optional]';
-          echo $cntndListOutput->entry($name,$data[$label],$key,$field,$listname,$data[$extra],$data[$optional]);
+
+          echo $cntndListOutput->entry($name,$data[$label],$key,$field,$listname,$data[$extra],\Cntnd\DynList\CntndListOutput::optionals($data, $optional));
           $index++;
         }
         echo '<button class="cntnd_list_action btn btn-primary" type="button" data-uuid="'.$entryFormId.'" data-listitem="'.$key.'" data-action="update">'.mi18n("SAVE").'</button>'."\n";

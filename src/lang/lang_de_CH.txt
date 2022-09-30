@@ -13,3 +13,6 @@ RESET=Zurücksetzen
 SWAP=Verschieben
 INVALID_FORM=Bitte mindestens einen Wert eingeben
 LIST_ENTRIES=Liste der Einträge
+FIELD_LABEL=Label
+FIELD_TYPE=Feldtyp
+FIELD_EXTRAS=Extras
