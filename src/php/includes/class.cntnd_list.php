@@ -190,7 +190,7 @@ class CntndList extends CntndUtil {
           break;
       case 'text':
       case 'textarea':
-          $this->doField($name, $field, $extra);
+          $this->doField($name, $field, $extra, $optional);
           break;
     }
   }
@@ -378,7 +378,7 @@ class CntndList extends CntndUtil {
     return preg_replace( '/[\W]/', '', $clean);
   }
 
-  private function doField($name,$field,$extra=false){
+  private function doField($name,$field,$extra=false,$optional=array()){
     if (!empty($field['value'])){
       // Extended > - lorem = List, etc.
       if ($extra=='extended'){
@@ -398,9 +398,13 @@ class CntndList extends CntndUtil {
       else {
         $text = $field['value'];
       }
-      $output = '<div class="'.$this->listname.' cntnd_text">'.stripslashes($text).'</div>';
+      $text = stripslashes($text);
+      if ($optional[0]=="nl2br") {
+        $text = nl2br($text);
+      }
+      $output = '<div class="'.$this->listname.' cntnd_text">'.$text.'</div>';
       if ($extra=='plain'){
-        $output = stripslashes($text);
+        $output = $text;
       }
       $this->assign($name, $output);
     }

@@ -61,13 +61,17 @@ if (!empty($template) AND $template!="false"){
       $type ='data['.$index.'][type]';
       $extra ='data['.$index.'][extra]';
       $optional ='data['.$index.'][optional]';
+      $enabled = '';
+      if ($data[$type]=="internal") {
+          $enabled = 'disabled';
+      }
 
       echo '<div class="form-vertical w-100">'."\n";
       echo '<fieldset class="form-vertical d-flex"><legend>'.\Cntnd\DynList\CntndList::tplName($field).'</legend>'."\n";
       echo '<div class="form-group w-25">'."\n";
       echo '<input data-uuid="'.$uuid.'" type="hidden" name="'.$tpl_field.'" value="'.$field.'" />';
       echo '<label for="'.$label.'">'.mi18n("FIELD_LABEL").' <strong>'.\Cntnd\DynList\CntndList::tplName($field).'</strong></label>'."\n";
-      echo '<input data-uuid="'.$uuid.'" id="'.$label.'" name="'.$label.'" type="text" value="'.$data[$label].'"/>'."\n";
+      echo '<input data-uuid="'.$uuid.'" id="'.$label.'" name="'.$label.'" type="text" value="'.$data[$label].'" '.$enabled.'/>'."\n";
       echo '</div>'."\n";
 
       echo '<div class="form-group w-25">'."\n";

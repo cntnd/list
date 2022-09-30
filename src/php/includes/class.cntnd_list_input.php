@@ -92,7 +92,7 @@ class CntndListInput {
   }
 
   public static function hasOptionalField($type){
-    return ($type=="gallery" OR $type=="image" OR $type=="downloadlink" OR $type=="dropdown" OR $type=="url");
+    return ($type=="gallery" OR $type=="image" OR $type=="downloadlink" OR $type=="dropdown" OR $type=="url" OR $type=="textarea");
   }
 
   public static function getOptionalFields($uuid,$optional,$type,$values,$client){
@@ -125,6 +125,11 @@ class CntndListInput {
             "Werte Kommagetrennt eintragen ohne Leerschlag oder neue Zeile",
             $optional,
             $values);
+        break;
+      case 'textarea':
+        $optionals[0]['value']='nl2br';
+        $optionals[0]['text'] ='Neue Zeile als Umbruch darstellen';
+        $ret = self::renderOptionalSelect($uuid,"Umbrüche",$optional,$optionals,$values);
         break;
     }
     return $ret;
