@@ -52,7 +52,7 @@ if (!$template OR empty($template) OR $template=="false"){
 if (!empty($template) AND $template!="false"){
   $file = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
   $templateContent = file_get_contents($file);
-  preg_match_all('@\{\w*?\}@is', $templateContent, $fields);
+  preg_match_all('@\{\$\w*?\}@is', $templateContent, $fields);
 
   echo '<div class="cntnd_list d-flex" data-uuid="'.$uuid.'">';
   $index=0;
@@ -65,10 +65,10 @@ if (!empty($template) AND $template!="false"){
       $optional ='data['.$index.'][optional]';
 
       echo '<div class="form-vertical w-100">'."\n";
-      echo '<fieldset class="form-vertical d-flex"><legend>'.$field.'</legend>'."\n";
+      echo '<fieldset class="form-vertical d-flex"><legend>'.\Cntnd\DynList\CntndList::tplName($field).'</legend>'."\n";
       echo '<div class="form-group w-25">'."\n";
       echo '<input data-uuid="'.$uuid.'" type="hidden" name="'.$tpl_field.'" value="'.$field.'" />';
-      echo '<label for="'.$label.'">'.mi18n("FIELD_LABEL").'</label>'."\n";
+      echo '<label for="'.$label.'">'.mi18n("FIELD_LABEL").' <strong>'.\Cntnd\DynList\CntndList::tplName($field).'</strong></label>'."\n";
       echo '<input data-uuid="'.$uuid.'" id="'.$label.'" name="'.$label.'" type="text" value="'.$data[$label].'"/>'."\n";
       echo '</div>'."\n";
 

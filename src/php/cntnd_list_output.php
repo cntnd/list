@@ -43,13 +43,14 @@ $count = 0;
 if (!empty($template) AND $template!="false"){
   $file = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
   $templateContent = file_get_contents($file);
-  preg_match_all('@\{\w*?\}@is', $templateContent, $templateFields);
+  preg_match_all('@\{\$\w*?\}@is', $templateContent, $templateFields);
   $count = count(array_unique($templateFields[0]));
 }
 $data = Cntnd\DynList\CntndListOutput::unescapeData("CMS_VALUE[3]");
 
 // values
-$cntndList = new Cntnd\DynList\CntndList($idart, $lang, $client, $listname);
+$tpl = cSmartyFrontend::getInstance();
+$cntndList = new Cntnd\DynList\CntndList($idart, $lang, $client, $listname, $tpl);
 $values = $cntndList->load();
 
 // module
@@ -75,7 +76,7 @@ if ($editmode){
     }
   }
 
-	echo '<div class="content_box"><label class="content_type_label">'.mi18n("MODULE").'</label>';
+	echo '<div class="content_box"><label class="content_type_label">'.mi18n("MODULE").': '.$listname.'</label>';
 
   if (!$template OR empty($template) OR $template=="false"){
     echo '<div class="cntnd_alert cntnd_alert-primary">'.mi18n("NO_TEMPLATE_OUTPUT").'</div>';
@@ -135,6 +136,6 @@ if ($editmode){
 }
 
 if (!$editmode){
-  $cntndList->render($templateContent, $values, $data);
+    $cntndList->render($template, $values, $data);
 }
 ?>

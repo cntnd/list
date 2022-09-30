@@ -25,13 +25,13 @@ class CntndList extends CntndUtil {
   private $mediatypes=array('pdf','docx','doc','xlsx','xls');
   private $imagetypes=array('jpeg','jpg','gif','png');
 
-  function __construct($idart, $lang, $client, $listname) {
+  function __construct($idart, $lang, $client, $listname, $tpl) {
     $this->idart = $idart;
     $this->lang = $lang;
     $this->listname = $listname;
     $this->client = $client;
     $this->db = new \cDb;
-    $this->tpl = new \Template();
+    $this->tpl = $tpl;
 
     $cfgClient = \cRegistry::getClientConfig();
     $this->uploadDir = $cfgClient[$client]["upl"]["htmlpath"];
@@ -141,7 +141,6 @@ class CntndList extends CntndUtil {
   }
 
   public function render($template, $values, $data){
-    $this->tpl->reset();
     if (is_array($values)){
       foreach ($values as $key => $value) {
         $index=0;
@@ -151,10 +150,9 @@ class CntndList extends CntndUtil {
           $this->renderField(self::tplName($name), $field, $data[$extra], self::optionals($data, $optional));
           $index++;
         }
-        $this->tpl->next();
+        $this->tpl->display($template);
       }
     }
-    $this->tpl->generate($template);
   }
 
   private function renderField($name, $field, $extra, $optional){
@@ -190,8 +188,8 @@ class CntndList extends CntndUtil {
     }
   }
 
-  private static function tplName($name){
-    return str_replace(array("{","}"),"",$name);
+  public static function tplName($name){
+    return str_replace(array('{','$','}'),"",$name);
   }
 
   private function doGalleryField($name,$field,$extra,$optional){
@@ -246,11 +244,11 @@ class CntndList extends CntndUtil {
         if ($extra=="link"){
           $trigger.=" > .cntnd_link";
           $link = '<a href="javascript:;" class="'.$this->listname.' cntnd_link cntnd_gallery">'.$field['link'].'</a>';
-          $this->tpl->set('d', '_'.$name.'_link', $link);
+          $this->tpl->assign('_'.$name.'_link', $link);
         }
         else if ($extra=="thumbnail"){
           $thumbnail = '<img src="'.$this->uploadDir.$this->images[$field['thumbnail']]['filename'].'" class="'.$this->listname.' cntnd_img cntnd_gallery" />';
-          $this->tpl->set('d', '_'.$name.'_thumbnail', $thumbnail);
+          $this->tpl->assign('_'.$name.'_thumbnail', $thumbnail);
         }
 
         $javascript ='<script language="javascript" type="text/javascript">
@@ -262,15 +260,15 @@ class CntndList extends CntndUtil {
                 			});
                 			-->
                 			</script>';
-        $this->tpl->set('d', '_'.$name.'_js', $javascript);
+        $this->tpl->assign('_'.$name.'_js', $javascript);
       }
-      $this->tpl->set('d', $name, $gallery);
+      $this->tpl->assign($name, $gallery);
     }
     else {
-      $this->tpl->set('d', '_'.$name.'_js', "");
-      $this->tpl->set('d', '_'.$name.'_link', "");
-      $this->tpl->set('d', '_'.$name.'_thumbnail', "");
-      $this->tpl->set('d', $name, "");
+      $this->tpl->assign('_'.$name.'_js', "");
+      $this->tpl->assign('_'.$name.'_link', "");
+      $this->tpl->assign('_'.$name.'_thumbnail', "");
+      $this->tpl->assign($name, "");
     }
   }
 
@@ -307,10 +305,10 @@ class CntndList extends CntndUtil {
       else if ($extra=='gallery') {
         $img = $this->doImage($image,$this->listname,"",$field['comment']);
       }
-      $this->tpl->set('d', $name, $img);
+      $this->tpl->assign($name, $img);
     }
     else {
-      $this->tpl->set('d', $name, "");
+      $this->tpl->assign($name, "");
     }
   }
 
@@ -331,13 +329,13 @@ class CntndList extends CntndUtil {
         $filename = $list[$field['value']]['filename'];
         $link = $this->uploadDir.$filename;
       }
-      $this->tpl->set('d', $name, $link);
+      $this->tpl->assign($name, $link);
       if (!empty($field['target']) && $field['target']!="0"){
-        $this->tpl->set('d', '_'.$name.'_target', $field['target']);
+        $this->tpl->assign('_'.$name.'_target', $field['target']);
       }
     }
     else {
-      $this->tpl->set('d', $name, "");
+      $this->tpl->assign($name, "");
     }
   }
 
@@ -348,10 +346,10 @@ class CntndList extends CntndUtil {
       if ($extra=='plain'){
         $output = $text;
       }
-      $this->tpl->set('d', $name, $output);
+      $this->tpl->assign($name, $output);
     }
     else {
-      $this->tpl->set('d', $name, "");
+      $this->tpl->assign($name, "");
     }
   }
 
@@ -397,40 +395,41 @@ class CntndList extends CntndUtil {
       if ($extra=='plain'){
         $output = stripslashes($text);
       }
-      $this->tpl->set('d', $name, $output);
+      $this->tpl->assign($name, $output);
     }
     else {
-        $this->tpl->set('d', $name, "");
+        $this->tpl->assign($name, "");
     }
   }
 
   private function doPlainField($name,$field){
     if (!empty($field['value'])){
-        $this->tpl->set('d', $name, $field['value']);
+        $this->tpl->assign($name, $field['value']);
     }
     else {
-        $this->tpl->set('d', $name, "");
+        $this->tpl->assign($name, "");
     }
   }
 
   private function doTitleField($name, $field){
     if (!empty($field['value'])){
-      $this->tpl->set('d', $name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
+      $this->tpl->assign($name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
     }
     else {
-        $this->tpl->set('d', $name, "");
+        $this->tpl->assign($name, "");
     }
   }
 
   private function doLinkField($name, $field){
     if (!empty($field['value'])){
-      $this->tpl->set('d', $name, '<span class="'.$this->listname.' cntnd_linktext">'.stripslashes($field['value']).'</span>');
+      $this->tpl->assign($name, '<span class="'.$this->listname.' cntnd_linktext">'.stripslashes($field['value']).'</span>');
       if (!empty($field['target']) && $field['target']!="0"){
-        $this->tpl->set('d', '_'.$name.'_target', $field['target']);
+        $this->tpl->assign('_'.$name.'_target', $field['target']);
       }
     }
     else {
-      $this->tpl->set('d', $name, "");
+      $this->tpl->assign($name, "");
+      $this->tpl->assign('_'.$name.'_target', "");
     }
   }
 
@@ -471,12 +470,12 @@ class CntndList extends CntndUtil {
       }
 
       $link_tag = '<a class="'.$this->listname.' cntnd_link '.$pikto.'" href="'.$link.'" target="'.$target.'">';
-      $this->tpl->set('d', $name, $link_tag);
-      $this->tpl->set('d', "_".$name."_end", '</a>');
+      $this->tpl->assign($name, $link_tag);
+      $this->tpl->assign("_".$name."_end", '</a>');
     }
     else {
-      $this->tpl->set('d', $name, "");
-      $this->tpl->set('d', "_".$name."_end", '');
+      $this->tpl->assign($name, "");
+      $this->tpl->assign("_".$name."_end", "");
     }
   }
 

@@ -9,9 +9,9 @@ class CntndListInput {
 
   public static function getChooseFields($field,$value){
     $internal="";
-    $no_fields=array("{id}","{icon}","{img_over}","{img_icon}","{target}","{javascript}");
+    $no_fields=array("{\$id}","{\$icon}","{\$img_over}","{\$img_icon}","{\$target}","{javascript}");
 
-    if (in_array($field,$no_fields) OR substr($field,0,2)=="{_"){
+    if (in_array($field,$no_fields) OR substr($field,0,3)=="{\$_"){
       $internal="selected";
     }
     if (!empty($value)){
