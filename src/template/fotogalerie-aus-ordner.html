@@ -1,8 +1,10 @@
+{foreach from=$data item=wrapper}
 <div class="fotogalerie">
-	{$_gallery_js}
-	<span id="{$gallery}" class="cntnd_gallery">
-		{$bild}
-		<h3>{$titel}</h3>
-		{$text}
+	{$wrapper._gallery_js}
+	<span id="{$wrapper.gallery}" class="cntnd_gallery">
+		{$wrapper.bild}
+		<h3>{$wrapper.titel}</h3>
+		{$wrapper.text}
 	</span>
 </div>
+{/foreach}
