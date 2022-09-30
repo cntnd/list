@@ -1,5 +1,7 @@
+{foreach from=$data item=wrapper}
 <div class="rechts">
 	<div>
-		{$link}{$link_titel}{$_link_end}
+		{$wrapper.link}{$wrapper.link_titel}{$wrapper._link_end}
 	</div>
 </div>
+{/foreach}

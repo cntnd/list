@@ -50,9 +50,7 @@ if (!$template OR empty($template) OR $template=="false"){
 <hr />
 <?php
 if (!empty($template) AND $template!="false"){
-  $file = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
-  $templateContent = file_get_contents($file);
-  preg_match_all('@\{\$\w*?\}@is', $templateContent, $fields);
+  $fields = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
 
   echo '<div class="cntnd_list d-flex" data-uuid="'.$uuid.'">';
   $index=0;

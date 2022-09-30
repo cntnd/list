@@ -16,6 +16,8 @@ class CntndList extends CntndUtil {
   private $listname;
   private $db;
   private $tpl;
+  private $tpl_data=array();
+  private $tpl_data_index=0;
   private $uploadDir;
   private $uploadPath;
 
@@ -141,6 +143,9 @@ class CntndList extends CntndUtil {
   }
 
   public function render($template, $values, $data){
+    $this->tpl_data=array();
+    $this->tpl_data_index=0;
+
     if (is_array($values)){
       foreach ($values as $key => $value) {
         $index=0;
@@ -150,9 +155,11 @@ class CntndList extends CntndUtil {
           $this->renderField(self::tplName($name), $field, $data[$extra], self::optionals($data, $optional));
           $index++;
         }
-        $this->tpl->display($template);
+        $this->tpl_data_index++;
       }
     }
+    $this->tpl->assign("data", $this->tpl_data);
+    $this->tpl->display($template);
   }
 
   private function renderField($name, $field, $extra, $optional){
@@ -189,7 +196,7 @@ class CntndList extends CntndUtil {
   }
 
   public static function tplName($name){
-    return str_replace(array('{','$','}'),"",$name);
+    return str_replace(array('{$wrapper.','}'),"",$name);
   }
 
   private function doGalleryField($name,$field,$extra,$optional){
@@ -244,11 +251,11 @@ class CntndList extends CntndUtil {
         if ($extra=="link"){
           $trigger.=" > .cntnd_link";
           $link = '<a href="javascript:;" class="'.$this->listname.' cntnd_link cntnd_gallery">'.$field['link'].'</a>';
-          $this->tpl->assign('_'.$name.'_link', $link);
+          $this->assign('_'.$name.'_link', $link);
         }
         else if ($extra=="thumbnail"){
           $thumbnail = '<img src="'.$this->uploadDir.$this->images[$field['thumbnail']]['filename'].'" class="'.$this->listname.' cntnd_img cntnd_gallery" />';
-          $this->tpl->assign('_'.$name.'_thumbnail', $thumbnail);
+          $this->assign('_'.$name.'_thumbnail', $thumbnail);
         }
 
         $javascript ='<script language="javascript" type="text/javascript">
@@ -260,15 +267,15 @@ class CntndList extends CntndUtil {
                 			});
                 			-->
                 			</script>';
-        $this->tpl->assign('_'.$name.'_js', $javascript);
+        $this->assign('_'.$name.'_js', $javascript);
       }
-      $this->tpl->assign($name, $gallery);
+      $this->assign($name, $gallery);
     }
     else {
-      $this->tpl->assign('_'.$name.'_js', "");
-      $this->tpl->assign('_'.$name.'_link', "");
-      $this->tpl->assign('_'.$name.'_thumbnail', "");
-      $this->tpl->assign($name, "");
+      $this->assign('_'.$name.'_js');
+      $this->assign('_'.$name.'_link');
+      $this->assign('_'.$name.'_thumbnail');
+      $this->assign($name);
     }
   }
 
@@ -305,10 +312,10 @@ class CntndList extends CntndUtil {
       else if ($extra=='gallery') {
         $img = $this->doImage($image,$this->listname,"",$field['comment']);
       }
-      $this->tpl->assign($name, $img);
+      $this->assign($name, $img);
     }
     else {
-      $this->tpl->assign($name, "");
+      $this->assign($name);
     }
   }
 
@@ -329,13 +336,13 @@ class CntndList extends CntndUtil {
         $filename = $list[$field['value']]['filename'];
         $link = $this->uploadDir.$filename;
       }
-      $this->tpl->assign($name, $link);
+      $this->assign($name, $link);
       if (!empty($field['target']) && $field['target']!="0"){
-        $this->tpl->assign('_'.$name.'_target', $field['target']);
+        $this->assign('_'.$name.'_target', $field['target']);
       }
     }
     else {
-      $this->tpl->assign($name, "");
+      $this->assign($name);
     }
   }
 
@@ -346,10 +353,10 @@ class CntndList extends CntndUtil {
       if ($extra=='plain'){
         $output = $text;
       }
-      $this->tpl->assign($name, $output);
+      $this->assign($name, $output);
     }
     else {
-      $this->tpl->assign($name, "");
+      $this->assign($name);
     }
   }
 
@@ -395,41 +402,41 @@ class CntndList extends CntndUtil {
       if ($extra=='plain'){
         $output = stripslashes($text);
       }
-      $this->tpl->assign($name, $output);
+      $this->assign($name, $output);
     }
     else {
-        $this->tpl->assign($name, "");
+        $this->assign($name);
     }
   }
 
   private function doPlainField($name,$field){
     if (!empty($field['value'])){
-        $this->tpl->assign($name, $field['value']);
+        $this->assign($name, $field['value']);
     }
     else {
-        $this->tpl->assign($name, "");
+        $this->assign($name);
     }
   }
 
   private function doTitleField($name, $field){
     if (!empty($field['value'])){
-      $this->tpl->assign($name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
+      $this->assign($name, '<h2 class="'.$this->listname.' cntnd_title">'.stripslashes($field['value']).'</h2>');
     }
     else {
-        $this->tpl->assign($name, "");
+        $this->assign($name);
     }
   }
 
   private function doLinkField($name, $field){
     if (!empty($field['value'])){
-      $this->tpl->assign($name, '<span class="'.$this->listname.' cntnd_linktext">'.stripslashes($field['value']).'</span>');
+      $this->assign($name, '<span class="'.$this->listname.' cntnd_linktext">'.stripslashes($field['value']).'</span>');
       if (!empty($field['target']) && $field['target']!="0"){
-        $this->tpl->assign('_'.$name.'_target', $field['target']);
+        $this->assign('_'.$name.'_target', $field['target']);
       }
     }
     else {
-      $this->tpl->assign($name, "");
-      $this->tpl->assign('_'.$name.'_target', "");
+      $this->assign($name);
+      $this->assign('_'.$name.'_target');
     }
   }
 
@@ -470,12 +477,12 @@ class CntndList extends CntndUtil {
       }
 
       $link_tag = '<a class="'.$this->listname.' cntnd_link '.$pikto.'" href="'.$link.'" target="'.$target.'">';
-      $this->tpl->assign($name, $link_tag);
-      $this->tpl->assign("_".$name."_end", '</a>');
+      $this->assign($name, $link_tag);
+      $this->assign("_".$name."_end", '</a>');
     }
     else {
-      $this->tpl->assign($name, "");
-      $this->tpl->assign("_".$name."_end", "");
+      $this->assign($name);
+      $this->assign("_".$name."_end");
     }
   }
 
@@ -532,6 +539,10 @@ class CntndList extends CntndUtil {
       return strpos($key, $optional) === 0;
     }, ARRAY_FILTER_USE_KEY);
     return array_values($optionals);
+  }
+  
+  private function assign($name,$value="") {
+    $this->tpl_data[$this->tpl_data_index][$name] = $value;
   }
 }
 

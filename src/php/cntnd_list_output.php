@@ -41,9 +41,7 @@ if (empty($listname)){
 $template = "CMS_VALUE[2]";
 $count = 0;
 if (!empty($template) AND $template!="false"){
-  $file = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
-  $templateContent = file_get_contents($file);
-  preg_match_all('@\{\$\w*?\}@is', $templateContent, $templateFields);
+  $templateFields = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
   $count = count(array_unique($templateFields[0]));
 }
 $data = Cntnd\DynList\CntndListOutput::unescapeData("CMS_VALUE[3]");

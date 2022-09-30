@@ -60,7 +60,10 @@ class CntndUtil {
 
   public static function template($module, $client, $template){
     $cfgClient = \cRegistry::getClientConfig();
-    return $cfgClient[$client]["module"]["path"].$module.'/template/'.$template;
+    $file = $cfgClient[$client]["module"]["path"].$module.'/template/'.$template;
+    $templateContent = file_get_contents($file);
+    preg_match_all('@\{\$\w+\.\w+\}@is', $templateContent, $fields);
+    return $fields;
   }
 }
 
