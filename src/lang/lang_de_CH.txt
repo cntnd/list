@@ -1,4 +1,4 @@
-MODULE=Dynamische List
+MODULE=Dynamische Liste
 SELECT_CHOOSE=-bitte wählen-
 CHOOSE_TEMPLATE=Bitte das Template auswählen ansonsten wird die Liste nicht angezeigt.
 DUPLICATE_CONFIG=Es besteht ein zweites Modul mit dem gleichen Namen. Bitte bei einem der Module den Namen anpassen, ansonsten gibt es probleme im Editor.

@@ -1,11 +1,12 @@
 ?><?php
 // cntnd_list_input
+$cntnd_module = "cntnd_list";
 
 // includes
 cInclude('module', 'includes/class.cntnd_list.php');
 cInclude('module', 'includes/class.cntnd_list_input.php');
 cInclude('module', 'includes/script.cntnd_list_input.php');
-cInclude('module', 'includes/style.cntnd_list_input.php');
+cInclude('module', 'includes/style.cntnd_list.php');
 
 // input/vars
 $listname = "CMS_VALUE[1]";
@@ -17,7 +18,7 @@ $data = Cntnd\DynList\CntndList::unescapeData("CMS_VALUE[3]");
 
 // other/vars
 $uuid = rand();
-$templates= Cntnd\DynList\CntndList::templates('cntnd_list', $client);
+$templates= Cntnd\DynList\CntndList::templates($cntnd_module, $client);
 
 if (!$template OR empty($template) OR $template=="false"){
   echo '<div class="cntnd_alert cntnd_alert-primary">'.mi18n("CHOOSE_TEMPLATE").'</div>';
@@ -25,10 +26,10 @@ if (!$template OR empty($template) OR $template=="false"){
 ?>
 <div class="cntnd_alert cntnd_alert-danger cntnd_list-duplicate hide"><?= mi18n("DUPLICATE_CONFIG") ?></div>
 <div class="form-vertical">
-  <div class="form-group">
-    <label for="listname_<?= $uuid ?>"><?= mi18n("LISTNAME") ?></label>
-    <input id="listname_<?= $uuid ?>" name="CMS_VAR[1]" type="text" class="cntnd_list_id" value="<?= $listname ?>" />
-  </div>
+    <div class="form-group">
+        <label for="listname_<?= $uuid ?>"><?= mi18n("LISTNAME") ?></label>
+        <input id="listname_<?= $uuid ?>" name="CMS_VAR[1]" type="text" class="cntnd_list_id" value="<?= $listname ?>" />
+    </div>
 
     <div class="form-group">
         <label for="template_<?= $uuid ?>"><?= mi18n("TEMPLATE") ?></label>
@@ -50,7 +51,7 @@ if (!$template OR empty($template) OR $template=="false"){
 <hr />
 <?php
 if (!empty($template) AND $template!="false"){
-  $fields = \Cntnd\DynList\CntndList::template('cntnd_list', $client, $template);
+  $fields = \Cntnd\DynList\CntndList::template($cntnd_module, $client, $template);
 
   echo '<div class="cntnd_list d-flex" data-uuid="'.$uuid.'">';
   $index=0;
