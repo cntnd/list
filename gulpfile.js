@@ -1,5 +1,5 @@
 var gulp        = require('gulp');
-var sass        = require('gulp-sass');
+var sass        = require('gulp-sass')(require('sass'));
 var minify      = require('gulp-minifier');
 var zip         = require('gulp-zip');
 var file        = require('gulp-file');

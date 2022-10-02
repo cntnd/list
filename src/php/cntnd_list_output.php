@@ -41,7 +41,7 @@ $values = $cntndList->load();
 // module
 if ($editmode) {
     echo '<div class="w-100">';
-    echo '<span class="module_box"><label class="module_label">'.mi18n("MODULE").'</label></span>';
+    echo '<span class="module_box"><label class="module_label">'.mi18n("MODULE").': '.$listname.'</label></span>';
     echo '<div class="input_form">';
     if ($_POST) {
         if (array_key_exists('data', $_POST)) {
