@@ -95,7 +95,9 @@ if ($editmode) {
         <div id="cntnd_list_items-<?= $listname ?>">
             <?php
             foreach ($values as $key => $value) {
-                echo '<div class="listitem" data-order="' . $key . '" id="' . $entryFormId . '_' . $key . '">' . "\n";
+                echo '<div class="listitem d-flex" data-order="' . $key . '" id="' . $entryFormId . '_' . $key . '">' . "\n";
+                echo '<div><span class="handle"></span></div>' . "\n";
+                echo '<div>' . "\n";
                 echo '<div class="cntnd_alert cntnd_alert-danger hide">' . mi18n("INVALID_FORM") . '</div>' . "\n";
                 $index = 0;
                 foreach ($value as $name => $field) {
@@ -109,7 +111,7 @@ if ($editmode) {
                 echo '<button class="cntnd_list_action btn btn-primary" type="button" data-uuid="' . $entryFormId . '" data-listitem="' . $key . '" data-action="update">' . mi18n("SAVE") . '</button>' . "\n";
                 //echo '<button class="cntnd_list_action btn btn-light" type="reset">'.mi18n("RESET") .'</button>'."\n";
                 echo '<button class="cntnd_list_action btn" type="button" data-uuid="' . $entryFormId . '" data-listitem="' . $key . '" data-action="delete">' . mi18n("DELETE") . '</button>' . "\n";
-                echo '</div>' . "\n";
+                echo '</div></div>' . "\n";
             }
             ?>
         </div>

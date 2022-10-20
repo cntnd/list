@@ -534,7 +534,8 @@ class CntndList extends CntndUtil {
             $("#ENTRY_"+uuid+" button[type=submit]").removeClass("hide");
           };'."\n";
     echo "var elements_$this->listname = document.getElementById('cntnd_list_items-$this->listname');\n";
-    echo "Sortable.create(elements_$this->listname, { draggable: '.listitem', onEnd: function(){ onReordering('$this->listname') }});\n";
+    //echo "Sortable.create(elements_$this->listname, { draggable: '.listitem', onEnd: function(){ onReordering('$this->listname') }});\n";
+    echo "Sortable.create(elements_$this->listname, { handle: '.handle', onEnd: function(){ onReordering('$this->listname') }});\n";
     echo '</script>'."\n";
   }
 

@@ -2,16 +2,30 @@
 
 .input_form {
   padding: 12px;
-  background: rgba(200,200,200,.75);
+  background: rgba(200, 200, 200, .75);
 }
 
 .listitem {
-  padding: 12px;
-  background: rgba(200,200,200,.25);
-  border: 2px solid rgba(200,200,200,.25);
+  padding: 0 0 12px 0;
+  background: rgba(200, 200, 200, .25);
+  border: 2px solid rgba(200, 200, 200, .25);
   border-radius: 0.25rem;
   margin-bottom: 12px;
 }
+
 .listitem:nth-child(even) {
-  background: rgba(200,200,200,.1);
+  background: rgba(200, 200, 200, .1);
+}
+
+.handle {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>');
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  display: inline-block;
+
+  height: 24px;
+  width: 24px;
+  margin: 12px 6px;
+  cursor: move;
 }
