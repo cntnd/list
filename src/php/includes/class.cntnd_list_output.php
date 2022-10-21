@@ -31,7 +31,7 @@ class CntndListOutput extends CntndUtil {
     else if ($value['value']=='111111111' || $value['value']=='222222222') {
       $disabled='';
     }
-    $input = $this->dropdownMedia($name.'[value]',$label,$this->restrictToFolder($this->documents,$optional[0]),'filename',$value['value'],true,true,true,$name.'[target]',$value['target']);
+    $input = $this->dropdownMedia($name.'[value]',$label,$this->restrictToFolder($this->documents,$optional[1]),'filename',$value['value'],true,true,true,$name.'[target]',$value['target']);
     $input.= '<div class="form-group '.$this->listname.' cntnd_url_path">';
     $input.= '<label><i>Pfad (URL, idart):</i></label>';
     $input.= '<input type="text" name="'.$name.'[link]" value="'.$value['link'].'" '.$disabled.' />';
