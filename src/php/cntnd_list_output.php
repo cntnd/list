@@ -11,7 +11,6 @@ $editmode = \cRegistry::isBackendEditMode();
 // includes
 cInclude('module', 'includes/class.cntnd_list.php');
 cInclude('module', 'includes/class.cntnd_list_output.php');
-cInclude('module', 'includes/class.template.php');
 if ($editmode) {
     cInclude('module', 'includes/style.cntnd_list.php');
     cInclude('module', 'includes/script.cntnd_list_output.php');
