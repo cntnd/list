@@ -122,6 +122,8 @@ if ($editmode) {
 }
 
 if (!$editmode) {
-    $cntndList->render($template, $values, $data);
+    if (!empty($template)) {
+        $cntndList->render($template, $values, $data);
+    }
 }
 ?>
