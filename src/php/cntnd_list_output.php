@@ -119,6 +119,7 @@ if ($editmode) {
         <?php
     }
     echo '</div>';
+    echo '</div>';
 }
 
 if (!$editmode) {
